@@ -54,7 +54,7 @@ class ValidatorChain extends EventManager
      * @param int      $priority
      * @return callable
      */
-    private function attachValidator($event, $callback, $priority)
+    private function attachValidator($event, array|callable $callback, $priority)
     {
         $context = null;
         if ($callback instanceof ValidatorInterface) {

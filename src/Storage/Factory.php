@@ -62,31 +62,25 @@ abstract class Factory
         $classParents    = class_parents($type);
         $classImplements = class_implements($type);
 
-        switch (true) {
-            case in_array(AbstractSessionArrayStorage::class, $classParents !== false ? $classParents : []):
-                return static::createSessionArrayStorage($type, $options);
-            case $type === ArrayStorage::class:
-            case in_array(ArrayStorage::class, $classParents !== false ? $classParents : []):
-                return static::createArrayStorage($type, $options);
-            case in_array(StorageInterface::class, $classImplements !== false ? $classImplements : []):
-                return new $type($options);
-            default:
-                throw new Exception\InvalidArgumentException(sprintf(
-                    'Unrecognized type "%s" provided; expects a class implementing %s\StorageInterface',
-                    $type,
-                    __NAMESPACE__
-                ));
-        }
+        return match (true) {
+            in_array(AbstractSessionArrayStorage::class, $classParents !== false ? $classParents : []) => static::createSessionArrayStorage($type, $options),
+            $type === ArrayStorage::class, in_array(ArrayStorage::class, $classParents !== false ? $classParents : []) => static::createArrayStorage($type, $options),
+            in_array(StorageInterface::class, $classImplements !== false ? $classImplements : []) => new $type($options),
+            default => throw new Exception\InvalidArgumentException(sprintf(
+                'Unrecognized type "%s" provided; expects a class implementing %s\StorageInterface',
+                $type,
+                __NAMESPACE__
+            )),
+        };
     }
 
     /**
      * Create a storage object from an ArrayStorage class (or a descendent)
      *
      * @param  string       $type
-     * @param  array        $options
      * @return ArrayStorage
      */
-    protected static function createArrayStorage($type, $options)
+    protected static function createArrayStorage($type, array $options)
     {
         $input         = [];
         $flags         = ArrayObject::ARRAY_AS_PROPS;
@@ -124,11 +118,10 @@ abstract class Factory
     /**
      * Create a storage object from a class extending AbstractSessionArrayStorage
      *
-     * @param  string                             $type
      * @return AbstractSessionArrayStorage
      * @throws Exception\InvalidArgumentException If the input option is invalid.
      */
-    protected static function createSessionArrayStorage($type, array $options)
+    protected static function createSessionArrayStorage(string $type, array $options)
     {
         $input = null;
         if (isset($options['input'])) {

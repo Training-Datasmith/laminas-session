@@ -32,7 +32,6 @@ class SessionConfigFactory implements FactoryInterface
      * "config_class" subkey.
      *
      * @param string $requestedName
-     * @param null|array $options
      * @return ConfigInterface
      * @throws ServiceNotCreatedException If session_config is missing, or an
      *     invalid config_class is used.

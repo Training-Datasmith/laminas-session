@@ -87,11 +87,10 @@ class ArrayStorage extends ArrayObject implements StorageInterface
      *
      * @param array-key $offset
      * @param mixed $value
-     * @return void
      * @throws Exception\RuntimeException
      */
     #[ReturnTypeWillChange]
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         if ($this->isImmutable()) {
             throw new Exception\RuntimeException(
@@ -147,11 +146,12 @@ class ArrayStorage extends ArrayObject implements StorageInterface
 
         $locks    = $this->getMetadata('_LOCKS');
         $readOnly = $this->getMetadata('_READONLY');
-
         if ($readOnly && ! $locks) {
             // global lock in play; all keys are locked
             return true;
-        } elseif ($readOnly && $locks) {
+        }
+
+        if ($readOnly && $locks) {
             return array_key_exists($key, $locks);
         }
 

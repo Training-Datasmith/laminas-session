@@ -47,9 +47,7 @@ class SessionStorage extends ArrayStorage
         }
 
         parent::__construct($input, $flags, $iteratorClass);
-        if ($resetSession) {
-            $_SESSION = $this;
-        }
+        $_SESSION = $this;
     }
 
     /**
@@ -57,8 +55,6 @@ class SessionStorage extends ArrayStorage
      *
      * Resets $_SESSION superglobal to an array, by casting object using
      * getArrayCopy().
-     *
-     * @return void
      */
     public function __destruct()
     {
@@ -73,12 +69,10 @@ class SessionStorage extends ArrayStorage
      * @param array<TKey, TValue> $array
      * @return $this
      */
-    public function fromArray(array $array)
+    public function fromArray(array $array): static
     {
         parent::fromArray($array);
-        if ($_SESSION !== $this) {
-            $_SESSION = $this;
-        }
+        $_SESSION = $this;
 
         return $this;
     }
@@ -88,7 +82,7 @@ class SessionStorage extends ArrayStorage
      *
      * @return $this
      */
-    public function markImmutable()
+    public function markImmutable(): static
     {
         $this['_IMMUTABLE'] = true;
 
@@ -97,10 +91,8 @@ class SessionStorage extends ArrayStorage
 
     /**
      * Determine if this object is isImmutable
-     *
-     * @return bool
      */
-    public function isImmutable()
+    public function isImmutable(): bool
     {
         return isset($this['_IMMUTABLE']) && $this['_IMMUTABLE'];
     }

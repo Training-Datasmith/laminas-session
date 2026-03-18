@@ -48,10 +48,8 @@ class MongoDB implements SaveHandlerInterface
 
     /**
      * MongoDB session save handler options
-     *
-     * @var MongoDBOptions
      */
-    protected $options;
+    protected \Laminas\Session\SaveHandler\MongoDBOptions $options;
 
     /**
      * Constructor

@@ -137,10 +137,8 @@ class Cache implements SaveHandlerInterface
      * Set cache storage
      *
      * @deprecated This method will no longer be needed in the future and will therefore be removed in version 3.0.
-     *
-     * @return Cache
      */
-    public function setCacheStorage(CacheStorage $cacheStorage)
+    public function setCacheStorage(CacheStorage $cacheStorage): static
     {
         $this->cacheStorage = $cacheStorage;
         return $this;

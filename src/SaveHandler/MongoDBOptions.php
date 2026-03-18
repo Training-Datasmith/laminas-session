@@ -312,7 +312,7 @@ class MongoDBOptions extends AbstractOptions
      *
      * @param boolean $useExpireAfterSecondsIndex
      */
-    public function setUseExpireAfterSecondsIndex($useExpireAfterSecondsIndex)
+    public function setUseExpireAfterSecondsIndex($useExpireAfterSecondsIndex): void
     {
         $this->useExpireAfterSecondsIndex = (bool) $useExpireAfterSecondsIndex;
     }

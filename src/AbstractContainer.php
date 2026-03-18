@@ -73,7 +73,7 @@ abstract class AbstractContainer extends ArrayObject
      */
     public function __construct($name = 'Default', ?Manager $manager = null)
     {
-        if (! preg_match('/^[a-z0-9][a-z0-9_\\\\]+$/i', $name)) {
+        if (! preg_match('/^[a-z0-9][a-z0-9_\\\\]+$/i', (string) $name)) {
             throw new Exception\InvalidArgumentException(
                 'Name passed to container is invalid; must consist of alphanumerics, backslashes and underscores only'
             );
@@ -90,10 +90,8 @@ abstract class AbstractContainer extends ArrayObject
 
     /**
      * Set the default ManagerInterface instance to use when none provided to constructor
-     *
-     * @return void
      */
-    public static function setDefaultManager(?Manager $manager = null)
+    public static function setDefaultManager(?Manager $manager = null): void
     {
         static::$defaultManager = $manager;
     }
@@ -389,9 +387,8 @@ abstract class AbstractContainer extends ArrayObject
      *
      * @param  string $offset
      * @param  mixed  $value
-     * @return void
      */
-    public function offsetSet($offset, $value)
+    public function offsetSet($offset, $value): void
     {
         $this->expireKeys($offset);
         $storage                 = $this->verifyNamespace();
@@ -445,9 +442,8 @@ abstract class AbstractContainer extends ArrayObject
      * Unset a single key in the container
      *
      * @param  string $offset
-     * @return void
      */
-    public function offsetUnset($offset)
+    public function offsetUnset($offset): void
     {
         if (! $this->offsetExists($offset)) {
             return;
@@ -518,11 +514,11 @@ abstract class AbstractContainer extends ArrayObject
             $container = $this;
 
             // Filter out any items not in our container
-            $expires = array_filter($vars, static fn($value): bool => $container->offsetExists($value));
+            $expires = array_filter($vars, $container->offsetExists(...));
 
             // Map item keys => timestamp
             $expires = array_flip($expires);
-            $expires = array_map(static fn() => $ts, $expires);
+            $expires = array_map(static fn(): float|int => $ts, $expires);
 
             // Create metadata array to merge in
             $data = ['EXPIRE_KEYS' => $expires];
@@ -565,11 +561,11 @@ abstract class AbstractContainer extends ArrayObject
             $container = $this;
 
             // FilterInterface out any items not in our container
-            $expires = array_filter($vars, static fn($value): bool => $container->offsetExists($value));
+            $expires = array_filter($vars, $container->offsetExists(...));
 
             // Map item keys => timestamp
             $expires = array_flip($expires);
-            $expires = array_map(static fn() => ['hops' => $hops, 'ts' => $ts], $expires);
+            $expires = array_map(static fn(): array => ['hops' => $hops, 'ts' => $ts], $expires);
 
             // Create metadata array to merge in
             $data = ['EXPIRE_HOPS_KEYS' => $expires];

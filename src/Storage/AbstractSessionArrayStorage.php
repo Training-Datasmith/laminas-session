@@ -53,9 +53,8 @@ abstract class AbstractSessionArrayStorage implements
      * Initialize Storage
      *
      * @param  array $input
-     * @return void
      */
-    public function init($input = null)
+    public function init($input = null): void
     {
         if ((null === $input) && isset($_SESSION)) {
             $input = $_SESSION;
@@ -71,10 +70,8 @@ abstract class AbstractSessionArrayStorage implements
 
     /**
      * Get Offset
-     *
-     * @return mixed
      */
-    public function __get(mixed $key)
+    public function __get(mixed $key): mixed
     {
         return $this->offsetGet($key);
     }
@@ -110,15 +107,6 @@ abstract class AbstractSessionArrayStorage implements
     }
 
     /**
-     * Destructor
-     *
-     * @return void
-     */
-    public function __destruct()
-    {
-    }
-
-    /**
      * Offset Exists
      *
      * @return bool
@@ -142,22 +130,18 @@ abstract class AbstractSessionArrayStorage implements
 
     /**
      * Offset Set
-     *
-     * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetSet(mixed $offset, mixed $value)
+    public function offsetSet(mixed $offset, mixed $value): void
     {
         $_SESSION[$offset] = $value;
     }
 
     /**
      * Offset Unset
-     *
-     * @return void
      */
     #[ReturnTypeWillChange]
-    public function offsetUnset(mixed $offset)
+    public function offsetUnset(mixed $offset): void
     {
         unset($_SESSION[$offset]);
     }
@@ -480,9 +464,5 @@ abstract class AbstractSessionArrayStorage implements
     public function __serialize(): array
     {
         return $_SESSION;
-    }
-
-    public function __unserialize(array $session)
-    {
     }
 }

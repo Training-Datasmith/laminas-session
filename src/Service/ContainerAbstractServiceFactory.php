@@ -92,9 +92,8 @@ class ContainerAbstractServiceFactory implements AbstractFactoryInterface
      * Create and return a named container (v3 usage).
      *
      * @param string $requestedName
-     * @return Container
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null): \Laminas\Session\Container
     {
         $manager = $this->getSessionManager($container);
         return new Container($requestedName, $manager);
@@ -165,9 +164,8 @@ class ContainerAbstractServiceFactory implements AbstractFactoryInterface
      * Normalize the container name in order to perform a lookup
      *
      * @param  string $name
-     * @return string
      */
-    protected function normalizeContainerName($name)
+    protected function normalizeContainerName($name): string
     {
         return strtolower($name);
     }

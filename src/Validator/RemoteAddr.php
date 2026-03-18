@@ -62,10 +62,8 @@ class RemoteAddr implements SessionValidator
     /**
      * isValid() - this method will determine if the current user IP matches the
      * IP we stored when we initialized this variable.
-     *
-     * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         return $this->getIpAddress() === $this->getData();
     }
@@ -77,9 +75,8 @@ class RemoteAddr implements SessionValidator
      * at session read, so this is the only way to switch setting.
      *
      * @param bool  $useProxy Whether to check also proxied IP addresses.
-     * @return void
      */
-    public static function setUseProxy($useProxy = true)
+    public static function setUseProxy($useProxy = true): void
     {
         static::$useProxy = $useProxy;
     }
@@ -96,10 +93,8 @@ class RemoteAddr implements SessionValidator
 
     /**
      * Set list of trusted proxy addresses
-     *
-     * @return void
      */
-    public static function setTrustedProxies(array $trustedProxies)
+    public static function setTrustedProxies(array $trustedProxies): void
     {
         static::$trustedProxies = $trustedProxies;
     }
@@ -108,9 +103,8 @@ class RemoteAddr implements SessionValidator
      * Set the header to introspect for proxy IPs
      *
      * @param  string $header
-     * @return void
      */
-    public static function setProxyHeader($header = 'X-Forwarded-For')
+    public static function setProxyHeader($header = 'X-Forwarded-For'): void
     {
         static::$proxyHeader = $header;
     }
@@ -143,10 +137,8 @@ class RemoteAddr implements SessionValidator
 
     /**
      * Return validator name
-     *
-     * @return string
      */
-    public function getName()
+    public function getName(): string
     {
         return self::class;
     }

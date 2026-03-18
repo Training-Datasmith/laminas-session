@@ -170,7 +170,7 @@ class SessionConfig extends StandardConfig
 
         $iniGet       = ini_get($key);
         $storageValue = (string) $storageValue;
-        if (false !== $iniGet && (string) $iniGet === $storageValue) {
+        if (false !== $iniGet && $iniGet === $storageValue) {
             return $this;
         }
 
@@ -242,10 +242,9 @@ class SessionConfig extends StandardConfig
      * Set session.save_handler
      *
      * @param  string $phpSaveHandler
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setPhpSaveHandler($phpSaveHandler)
+    public function setPhpSaveHandler($phpSaveHandler): static
     {
         $this->saveHandler             = $this->performSaveHandlerUpdate($phpSaveHandler);
         $this->options['save_handler'] = $this->saveHandler;
@@ -256,10 +255,9 @@ class SessionConfig extends StandardConfig
      * Set session.save_path
      *
      * @param  string $savePath
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException On invalid path.
      */
-    public function setSavePath($savePath)
+    public function setSavePath($savePath): static
     {
         if ($this->getOption('save_handler') === 'files') {
             parent::setSavePath($savePath);
@@ -273,34 +271,31 @@ class SessionConfig extends StandardConfig
      * Set session.serialize_handler
      *
      * @param  string $serializeHandler
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setSerializeHandler($serializeHandler)
+    public function setSerializeHandler($serializeHandler): static
     {
         $serializeHandler = (string) $serializeHandler;
 
-        set_error_handler([$this, 'handleError']);
+        set_error_handler($this->handleError(...));
         ini_set('session.serialize_handler', $serializeHandler);
         restore_error_handler();
         if ($this->phpErrorCode >= E_WARNING) {
             throw new Exception\InvalidArgumentException('Invalid serialize handler specified');
         }
 
-        $this->serializeHandler = (string) $serializeHandler;
+        $this->serializeHandler = $serializeHandler;
         return $this;
     }
 
     // session.cache_limiter
-
     /**
      * Set cache limiter
      *
      * @param string $cacheLimiter
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setCacheLimiter($cacheLimiter)
+    public function setCacheLimiter($cacheLimiter): static
     {
         $cacheLimiter = (string) $cacheLimiter;
         if (! in_array($cacheLimiter, $this->validCacheLimiters)) {
@@ -317,14 +312,11 @@ class SessionConfig extends StandardConfig
      * @deprecated removed in PHP 7.1
      *
      * @param  string|int $hashFunction
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setHashFunction($hashFunction)
+    public function setHashFunction($hashFunction): static
     {
-        if (PHP_VERSION_ID >= 70100) {
-            trigger_error('session.hash_function is removed starting with PHP 7.1', E_USER_DEPRECATED);
-        }
+        trigger_error('session.hash_function is removed starting with PHP 7.1', E_USER_DEPRECATED);
 
         $hashFunction       = (string) $hashFunction;
         $validHashFunctions = $this->getHashFunctions();
@@ -343,14 +335,11 @@ class SessionConfig extends StandardConfig
      * @deprecated removed in PHP 7.1
      *
      * @param  int $hashBitsPerCharacter
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setHashBitsPerCharacter($hashBitsPerCharacter)
+    public function setHashBitsPerCharacter($hashBitsPerCharacter): static
     {
-        if (PHP_VERSION_ID >= 70100) {
-            trigger_error('session.hash_bits_per_character is removed starting with PHP 7.1', E_USER_DEPRECATED);
-        }
+        trigger_error('session.hash_bits_per_character is removed starting with PHP 7.1', E_USER_DEPRECATED);
 
         if (
             ! is_numeric($hashBitsPerCharacter)
@@ -371,10 +360,9 @@ class SessionConfig extends StandardConfig
      * @deprecated see https://wiki.php.net/rfc/deprecations_php_8_4#sessionsid_length_and_sessionsid_bits_per_character
      *
      * @param  int $sidBitsPerCharacter
-     * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setSidBitsPerCharacter($sidBitsPerCharacter)
+    public function setSidBitsPerCharacter($sidBitsPerCharacter): static
     {
         if (
             ! is_numeric($sidBitsPerCharacter)
@@ -477,7 +465,6 @@ class SessionConfig extends StandardConfig
      * In all other cases, an exception is raised.
      *
      * @param string|SessionHandlerInterface $phpSaveHandler
-     * @return string
      * @throws Exception\InvalidArgumentException If an error occurs when
      *     setting a PHP session save handler module.
      * @throws Exception\InvalidArgumentException If the $phpSaveHandler
@@ -486,14 +473,14 @@ class SessionConfig extends StandardConfig
      * @throws Exception\InvalidArgumentException If $phpSaveHandler is
      *     a non-string value that does not implement SessionHandlerInterface.
      */
-    private function performSaveHandlerUpdate($phpSaveHandler)
+    private function performSaveHandlerUpdate($phpSaveHandler): string
     {
         if (is_string($phpSaveHandler)) {
             $knownHandlers = $this->locateRegisteredSaveHandlers();
 
             if (in_array($phpSaveHandler, $knownHandlers, true)) {
                 $phpSaveHandler = strtolower($phpSaveHandler);
-                set_error_handler([$this, 'handleError']);
+                set_error_handler($this->handleError(...));
                 $this->sessionModuleName($phpSaveHandler);
                 restore_error_handler();
                 if ($this->phpErrorCode >= E_WARNING) {
@@ -541,10 +528,8 @@ class SessionConfig extends StandardConfig
      *
      * Requires capturing an output buffer, as phpinfo does not have an option
      * to return the value as a string.
-     *
-     * @return string
      */
-    private function getPhpInfoForModules()
+    private function getPhpInfoForModules(): string
     {
         $phpinfo = self::$phpinfo;
 
@@ -560,11 +545,8 @@ class SessionConfig extends StandardConfig
      * Parse a list of PHP session save handlers from HTML.
      *
      * Format is "<tr><td class="e">Registered save handlers</td><td class="v">{handlers}</td></tr>".
-     *
-     * @param string $content
-     * @return array
      */
-    private function parseSaveHandlersFromHtml($content)
+    private function parseSaveHandlersFromHtml(string $content): array
     {
         if (! preg_match('#<td class="v">(?P<handlers>[^<]+)</td>#', $content, $matches)) {
             return [];
@@ -581,10 +563,9 @@ class SessionConfig extends StandardConfig
      *
      * Format is "Registered save handlers => <handlers>".
      *
-     * @param string $content
      * @return array
      */
-    private function parseSaveHandlersFromPlainText($content)
+    private function parseSaveHandlersFromPlainText(string $content)
     {
         [$prefix, $handlers] = explode('=>', $content);
         $handlers            = trim($handlers);

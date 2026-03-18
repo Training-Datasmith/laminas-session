@@ -19,8 +19,7 @@ use function sprintf;
  */
 abstract class AbstractManager implements Manager
 {
-    /** @var Config */
-    protected $config;
+    protected ?\Laminas\Session\Config\ConfigInterface $config;
 
     /**
      * Default configuration class to use when no configuration provided
@@ -29,8 +28,7 @@ abstract class AbstractManager implements Manager
      */
     protected $defaultConfigClass = SessionConfig::class;
 
-    /** @var Storage */
-    protected $storage;
+    protected ?\Laminas\Session\Storage\StorageInterface $storage;
 
     /**
      * Default storage class to use when no storage provided
@@ -39,8 +37,7 @@ abstract class AbstractManager implements Manager
      */
     protected $defaultStorageClass = SessionArrayStorage::class;
 
-    /** @var SaveHandler */
-    protected $saveHandler;
+    protected ?\Laminas\Session\SaveHandler\SaveHandlerInterface $saveHandler;
 
     /**
      * Constructor

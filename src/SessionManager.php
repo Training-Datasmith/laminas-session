@@ -94,10 +94,8 @@ class SessionManager extends AbstractManager
 
     /**
      * Does a session exist and is it currently active?
-     *
-     * @return bool
      */
-    public function sessionExists()
+    public function sessionExists(): bool
     {
         if (session_status() === PHP_SESSION_ACTIVE) {
             return true;
@@ -128,10 +126,9 @@ class SessionManager extends AbstractManager
      *
      * @param bool $preserveStorage        If set to true, current session storage will not be overwritten by the
      *                                     contents of $_SESSION.
-     * @return void
      * @throws Exception\RuntimeException
      */
-    public function start($preserveStorage = false)
+    public function start($preserveStorage = false): void
     {
         if ($this->sessionExists()) {
             return;
@@ -205,9 +202,8 @@ class SessionManager extends AbstractManager
      * Destroy/end a session
      *
      * @param  array $options See {@link $defaultDestroyOptions}
-     * @return void
      */
-    public function destroy(?array $options = null)
+    public function destroy(?array $options = null): void
     {
         // session_destroy() requires active session while method
         // $this->sessionExists() includes other conditions
@@ -235,10 +231,8 @@ class SessionManager extends AbstractManager
      * Write session to save handler and close
      *
      * Once done, the Storage object will be marked as isImmutable.
-     *
-     * @return void
      */
-    public function writeClose()
+    public function writeClose(): void
     {
         // The assumption is that we're using PHP's ext/session.
         // session_write_close() will actually overwrite $_SESSION with an
@@ -267,10 +261,9 @@ class SessionManager extends AbstractManager
      * validation, an exception will be raised.
      *
      * @param  string $name
-     * @return SessionManager
      * @throws Exception\InvalidArgumentException
      */
-    public function setName($name)
+    public function setName($name): static
     {
         if ($this->sessionExists()) {
             throw new Exception\InvalidArgumentException(
@@ -317,9 +310,8 @@ class SessionManager extends AbstractManager
      * Can safely be called in the middle of a session.
      *
      * @param  string $id
-     * @return SessionManager
      */
-    public function setId($id)
+    public function setId($id): static
     {
         if ($this->sessionExists()) {
             throw new Exception\RuntimeException(
@@ -334,10 +326,8 @@ class SessionManager extends AbstractManager
      * Get session ID
      *
      * Proxies to {@link session_id()}
-     *
-     * @return string
      */
-    public function getId()
+    public function getId(): string
     {
         $ret = session_id();
         assert(is_string($ret));
@@ -351,9 +341,8 @@ class SessionManager extends AbstractManager
      * native ID generation Can safely be called in the middle of a session.
      *
      * @param  bool $deleteOldSession
-     * @return SessionManager
      */
-    public function regenerateId($deleteOldSession = true)
+    public function regenerateId($deleteOldSession = true): static
     {
         if ($this->sessionExists()) {
             session_regenerate_id((bool) $deleteOldSession);
@@ -368,9 +357,8 @@ class SessionManager extends AbstractManager
      * Can safely be called in the middle of a session.
      *
      * @param  null|int $ttl
-     * @return SessionManager
      */
-    public function rememberMe($ttl = null)
+    public function rememberMe($ttl = null): static
     {
         if (null === $ttl) {
             $ttl = $this->getConfig()->getRememberMeSeconds();
@@ -383,10 +371,8 @@ class SessionManager extends AbstractManager
      * Set a 0s TTL for the session cookie
      *
      * Can safely be called in the middle of a session.
-     *
-     * @return SessionManager
      */
-    public function forgetMe()
+    public function forgetMe(): static
     {
         $this->setSessionCookieLifetime(0);
         return $this;
@@ -396,10 +382,8 @@ class SessionManager extends AbstractManager
      * Set the validator chain to use when validating a session
      *
      * In most cases, you should use an instance of {@link ValidatorChain}.
-     *
-     * @return SessionManager
      */
-    public function setValidatorChain(EventManagerInterface $chain)
+    public function setValidatorChain(EventManagerInterface $chain): static
     {
         $this->validatorChain = $chain;
         return $this;
@@ -425,10 +409,8 @@ class SessionManager extends AbstractManager
      *
      * Notifies the Validator Chain until either all validators have returned
      * true or one has failed.
-     *
-     * @return bool
      */
-    public function isValid()
+    public function isValid(): bool
     {
         $validator = $this->getValidatorChain();
 
@@ -454,10 +436,8 @@ class SessionManager extends AbstractManager
      * Expire the session cookie
      *
      * Sends a session cookie with no value, and with an expiry in the past.
-     *
-     * @return void
      */
-    public function expireSessionCookie()
+    public function expireSessionCookie(): void
     {
         $config = $this->getConfig();
         if (! $config->getUseCookies()) {
@@ -465,12 +445,8 @@ class SessionManager extends AbstractManager
         }
         setcookie(
             $this->getName(), // session name
-            '', // value
-            $_SERVER['REQUEST_TIME'] - 42000, // TTL for cookie
-            $config->getCookiePath(),
-            $config->getCookieDomain(),
-            (bool) $config->getCookieSecure(),
-            (bool) $config->getCookieHttpOnly()
+            '',
+            ['expires' => $_SERVER['REQUEST_TIME'] - 42000, 'path' => $config->getCookiePath(), 'domain' => $config->getCookieDomain(), 'secure' => (bool) $config->getCookieSecure(), 'httponly' => (bool) $config->getCookieHttpOnly()]
         );
     }
 
@@ -504,10 +480,8 @@ class SessionManager extends AbstractManager
      *
      * Since ext/session is coupled to this particular session manager
      * register the save handler with ext/session.
-     *
-     * @return bool
      */
-    protected function registerSaveHandler(SaveHandler\SaveHandlerInterface $saveHandler)
+    protected function registerSaveHandler(SaveHandler\SaveHandlerInterface $saveHandler): bool
     {
         return session_set_save_handler($saveHandler);
     }
