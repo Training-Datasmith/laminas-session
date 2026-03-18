@@ -1,15 +1,19 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session;
+
+use function class_exists;
 
 use Laminas\Session\Config\ConfigInterface as Config;
 use Laminas\Session\Config\SessionConfig;
 use Laminas\Session\ManagerInterface as Manager;
 use Laminas\Session\SaveHandler\SaveHandlerInterface as SaveHandler;
 use Laminas\Session\Storage\SessionArrayStorage;
+
 use Laminas\Session\Storage\StorageInterface as Storage;
 
-use function class_exists;
 use function sprintf;
 
 /**

@@ -1,28 +1,41 @@
 <?php
 
-namespace Laminas\Session\Config;
+declare(strict_types=1);
 
-use Laminas\Session\Exception;
-use Laminas\Session\SaveHandler\SaveHandlerInterface;
-use SessionHandlerInterface;
+namespace Laminas\Session\Config;
 
 use function array_merge;
 use function array_search;
 use function array_shift;
+
 use function assert;
 use function class_exists;
+
+use const E_USER_DEPRECATED;
+use const E_WARNING;
+
 use function explode;
 use function hash_algos;
 use function implode;
 use function in_array;
+
+use const INFO_MODULES;
+
 use function ini_get;
 use function ini_set;
 use function is_a;
 use function is_array;
 use function is_numeric;
 use function is_string;
+
+use Laminas\Session\Exception;
+use Laminas\Session\SaveHandler\SaveHandlerInterface;
+
 use function ob_get_clean;
 use function ob_start;
+
+use const PHP_SESSION_ACTIVE;
+
 use function preg_match;
 use function preg_split;
 use function restore_error_handler;
@@ -30,18 +43,16 @@ use function session_set_save_handler;
 use function session_start;
 use function session_status;
 use function session_write_close;
+
+use SessionHandlerInterface;
+
 use function set_error_handler;
 use function sprintf;
+
 use function str_contains;
 use function strtolower;
 use function trigger_error;
 use function trim;
-
-use const E_USER_DEPRECATED;
-use const E_WARNING;
-use const INFO_MODULES;
-use const PHP_SESSION_ACTIVE;
-use const PHP_VERSION_ID;
 
 /**
  * Session configuration proxying to session INI options
@@ -205,7 +216,7 @@ class SessionConfig extends StandardConfig
     public function getStorageOption($storageOption)
     {
         return match ($storageOption) {
-             // No remote storage option; just return the current value
+            // No remote storage option; just return the current value
             'remember_me_seconds' => $this->rememberMeSeconds,
 
             'url_rewriter_tags' => ini_get('url_rewriter.tags'),

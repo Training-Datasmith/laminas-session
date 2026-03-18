@@ -1,25 +1,31 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\Service;
 
 // phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
 
+use function array_merge;
+use function class_exists;
+use function get_debug_type;
+
 use Interop\Container\ContainerInterface;
+
+use function is_array;
+use function is_subclass_of;
+
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Session\Config\ConfigInterface;
+
 use Laminas\Session\Container;
 use Laminas\Session\ManagerInterface;
 use Laminas\Session\SaveHandler\SaveHandlerInterface;
 use Laminas\Session\SessionManager;
 use Laminas\Session\Storage\StorageInterface;
 
-use function array_merge;
-use function class_exists;
-use function get_debug_type;
-use function is_array;
-use function is_subclass_of;
 use function sprintf;
 
 /**

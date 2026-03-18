@@ -1,14 +1,16 @@
 <?php
 
-namespace Laminas\Session;
+declare(strict_types=1);
 
-use Laminas\EventManager\EventManager;
-use Laminas\Session\Storage\StorageInterface;
-use Laminas\Session\Validator\ValidatorInterface;
+namespace Laminas\Session;
 
 use function array_shift;
 use function array_unshift;
 use function is_array;
+
+use Laminas\EventManager\EventManager;
+use Laminas\Session\Storage\StorageInterface;
+use Laminas\Session\Validator\ValidatorInterface;
 
 class ValidatorChain extends EventManager
 {

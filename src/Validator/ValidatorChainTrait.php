@@ -1,13 +1,16 @@
 <?php
 
-namespace Laminas\Session\Validator;
+declare(strict_types=1);
 
-use Laminas\Session\Storage\StorageInterface;
-use Laminas\Stdlib\CallbackHandler;
+namespace Laminas\Session\Validator;
 
 use function array_shift;
 use function array_unshift;
+
 use function is_array;
+
+use Laminas\Session\Storage\StorageInterface;
+use Laminas\Stdlib\CallbackHandler;
 
 /**
  * Base trait for validator chain implementations

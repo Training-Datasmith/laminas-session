@@ -1,22 +1,28 @@
 <?php
 
-namespace Laminas\Session;
+declare(strict_types=1);
 
-use ArrayIterator;
-use Laminas\Session\ManagerInterface as Manager;
-use Laminas\Session\Storage\StorageInterface as Storage;
-use Laminas\Stdlib\ArrayObject;
-use Traversable;
+namespace Laminas\Session;
 
 use function array_filter;
 use function array_flip;
 use function array_keys;
 use function array_map;
+
+use ArrayIterator;
+
 use function is_array;
 use function is_object;
 use function is_scalar;
+
+use Laminas\Session\ManagerInterface as Manager;
+use Laminas\Session\Storage\StorageInterface as Storage;
+use Laminas\Stdlib\ArrayObject;
+
 use function preg_match;
 use function time;
+
+use Traversable;
 
 /**
  * Session storage container
@@ -518,7 +524,7 @@ abstract class AbstractContainer extends ArrayObject
 
             // Map item keys => timestamp
             $expires = array_flip($expires);
-            $expires = array_map(static fn(): float|int => $ts, $expires);
+            $expires = array_map(static fn (): float|int => $ts, $expires);
 
             // Create metadata array to merge in
             $data = ['EXPIRE_KEYS' => $expires];
@@ -565,7 +571,7 @@ abstract class AbstractContainer extends ArrayObject
 
             // Map item keys => timestamp
             $expires = array_flip($expires);
-            $expires = array_map(static fn(): array => ['hops' => $hops, 'ts' => $ts], $expires);
+            $expires = array_map(static fn (): array => ['hops' => $hops, 'ts' => $ts], $expires);
 
             // Create metadata array to merge in
             $data = ['EXPIRE_HOPS_KEYS' => $expires];

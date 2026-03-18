@@ -1,6 +1,12 @@
-<?php // phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
+<?php
+
+declare(strict_types=1);
+// phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
 
 namespace LaminasTest\Session\Config;
+
+use function extension_loaded;
+use function ini_get;
 
 use Laminas\Session\Config\SessionConfig;
 use Laminas\Session\Exception;
@@ -12,12 +18,12 @@ use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\RunTestsInSeparateProcesses;
 use PHPUnit\Framework\TestCase;
 use ReflectionProperty;
+
+use function session_start;
+
 use SessionHandlerInterface;
 use stdClass;
 
-use function extension_loaded;
-use function ini_get;
-use function session_start;
 use function var_export;
 
 #[RunTestsInSeparateProcesses]
@@ -937,7 +943,7 @@ final class SessionConfigTest extends TestCase
     public function testProvidingValidKnownSessionHandlerToSetPhpSaveHandlerResultsInNoErrors(): void
     {
         $this->config::$phpinfo = static function (): void {
-            echo "Registered save handlers => user files unittest";
+            echo 'Registered save handlers => user files unittest';
         };
 
         /** @return bool|string */
@@ -956,7 +962,7 @@ final class SessionConfigTest extends TestCase
     public function testCanProvidePathWhenUsingRedisSaveHandler(): void
     {
         $this->config::$phpinfo = static function (): void {
-            echo "Registered save handlers => user files redis";
+            echo 'Registered save handlers => user files redis';
         };
 
         /** @return bool|string */

@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\SaveHandler\DbTableGateway;
 
+use function extension_loaded;
+use function getenv;
+
 use Laminas\Db\Adapter\Adapter;
+
 use Laminas\Session\SaveHandler\DbTableGateway;
 use LaminasTest\Session\SaveHandler\AbstractDbTableGatewayTestCase;
 
-use function extension_loaded;
-use function getenv;
 use function sprintf;
 
 final class PdoMysqlAdapterTest extends AbstractDbTableGatewayTestCase

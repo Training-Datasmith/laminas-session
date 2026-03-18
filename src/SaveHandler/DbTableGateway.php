@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\SaveHandler;
 
+use function ini_get;
+
 use Laminas\Db\TableGateway\TableGateway;
+
 use ReturnTypeWillChange;
 
-use function ini_get;
 use function sprintf;
 use function time;
 

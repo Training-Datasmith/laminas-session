@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace Laminas\Session\Validator;
 
+use function assert;
+use function explode;
+
+use function is_array;
+use function is_string;
+
 use Laminas\Session\Container;
 use Laminas\Validator\AbstractValidator;
 
-use function assert;
-use function explode;
-use function is_array;
-use function is_string;
 use function md5;
 use function random_bytes;
 use function sprintf;

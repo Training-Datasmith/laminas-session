@@ -1,21 +1,29 @@
 <?php
 
-namespace Laminas\Session\Storage;
+declare(strict_types=1);
 
-use ArrayIterator;
-use ArrayObject;
-use IteratorAggregate;
-use Laminas\Session\Exception;
-use ReturnTypeWillChange;
+namespace Laminas\Session\Storage;
 
 use function array_flip;
 use function array_key_exists;
 use function array_keys;
 use function array_replace_recursive;
+
+use ArrayIterator;
+
+use ArrayObject;
+
 use function count;
 use function is_array;
 use function is_object;
+
+use IteratorAggregate;
+use Laminas\Session\Exception;
+
 use function microtime;
+
+use ReturnTypeWillChange;
+
 use function serialize;
 use function sprintf;
 use function unserialize;

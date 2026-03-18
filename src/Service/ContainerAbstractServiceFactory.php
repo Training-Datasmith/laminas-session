@@ -1,19 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\Service;
 
 // phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
 
+use function array_change_key_case;
+use function array_flip;
+use function array_key_exists;
+
 use Interop\Container\ContainerInterface;
+
+use function is_array;
+
 use Laminas\ServiceManager\AbstractFactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Session\Container;
 use Laminas\Session\ManagerInterface;
 
-use function array_change_key_case;
-use function array_flip;
-use function array_key_exists;
-use function is_array;
 use function strtolower;
 
 /**

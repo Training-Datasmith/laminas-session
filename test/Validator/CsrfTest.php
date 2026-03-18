@@ -4,18 +4,22 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\Validator;
 
+use function class_exists;
+
 use Laminas\Session\Config\StandardConfig;
 use Laminas\Session\Container;
 use Laminas\Session\SessionManager;
 use Laminas\Session\Storage\ArrayStorage;
 use Laminas\Session\Validator\Csrf;
+
+use function md5;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+
 use PHPUnit\Framework\TestCase;
 use ReflectionMethod;
 
-use function class_exists;
-use function md5;
 use function sprintf;
 use function str_replace;
 use function strtr;

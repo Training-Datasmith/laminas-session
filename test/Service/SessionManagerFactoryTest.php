@@ -4,6 +4,8 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\Service;
 
+use function iterator_to_array;
+
 use Laminas\EventManager\Test\EventListenerIntrospectionTrait;
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Laminas\ServiceManager\ServiceManager;
@@ -22,9 +24,8 @@ use LaminasTest\Session\TestAsset\TestSaveHandler;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
-use RuntimeException;
 
-use function iterator_to_array;
+use RuntimeException;
 
 #[CoversClass(SessionManagerFactory::class)]
 final class SessionManagerFactoryTest extends TestCase

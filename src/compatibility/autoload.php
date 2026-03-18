@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 /**
  * Legacy purposes only, to prevent code that references it from breaking.
  */

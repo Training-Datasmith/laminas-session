@@ -4,8 +4,17 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session;
 
+use function array_merge;
+
 use ArrayIterator;
 use DateTime;
+
+use const E_WARNING;
+
+use function extension_loaded;
+use function headers_sent;
+use function ini_get;
+
 use Laminas\Session\Config\SessionConfig;
 use Laminas\Session\Config\StandardConfig;
 use Laminas\Session\Exception\InvalidArgumentException;
@@ -17,19 +26,18 @@ use Laminas\Session\Storage\SessionStorage;
 use Laminas\Session\Validator\Id;
 use Laminas\Session\Validator\RemoteAddr;
 use LaminasTest\Session\TestAsset\Php81CompatibleStorageInterface;
+
+use function ob_flush;
+
+use const PHP_SAPI;
+
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
 use PHPUnit\Framework\Attributes\PreserveGlobalState;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
-use Traversable;
 
-use function array_merge;
-use function extension_loaded;
-use function headers_sent;
-use function ini_get;
-use function ob_flush;
 use function preg_match;
 use function range;
 use function restore_error_handler;
@@ -40,12 +48,13 @@ use function session_start;
 use function session_write_close;
 use function set_error_handler;
 use function stristr;
+
+use Traversable;
+
 use function uniqid;
+
 use function var_export;
 use function xdebug_get_headers;
-
-use const E_WARNING;
-use const PHP_SAPI;
 
 #[PreserveGlobalState(false)]
 #[CoversClass(SessionManager::class)]

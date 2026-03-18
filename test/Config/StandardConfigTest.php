@@ -1,19 +1,26 @@
-<?php // phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
+<?php
+
+declare(strict_types=1);
+// phpcs:disable Squiz.Commenting.FunctionComment.WrongStyle
 
 namespace LaminasTest\Session\Config;
 
+use const E_USER_DEPRECATED;
+
 use Exception;
+
+use function extension_loaded;
+
 use Laminas\Session\Config\StandardConfig;
 use Laminas\Session\Exception\InvalidArgumentException;
 use PHPUnit\Framework\Attributes\CoversClass;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
 
-use function extension_loaded;
 use function restore_error_handler;
-use function set_error_handler;
 
-use const E_USER_DEPRECATED;
+use function set_error_handler;
 
 #[CoversClass(StandardConfig::class)]
 final class StandardConfigTest extends TestCase

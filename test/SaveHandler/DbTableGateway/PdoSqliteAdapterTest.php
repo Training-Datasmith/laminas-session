@@ -4,11 +4,13 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\SaveHandler\DbTableGateway;
 
+use function extension_loaded;
+
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Session\SaveHandler\DbTableGateway;
+
 use LaminasTest\Session\SaveHandler\AbstractDbTableGatewayTestCase;
 
-use function extension_loaded;
 use function sprintf;
 
 final class PdoSqliteAdapterTest extends AbstractDbTableGatewayTestCase

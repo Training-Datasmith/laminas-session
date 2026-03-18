@@ -4,13 +4,15 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\Validator;
 
+use function assert;
+
 use Laminas\Session\Storage\ArrayStorage;
 use Laminas\Session\Validator\ValidatorInterface;
 use Laminas\Session\ValidatorChain;
 use LaminasTest\Session\TestAsset\TestFailingValidator;
+
 use PHPUnit\Framework\TestCase;
 
-use function assert;
 use function property_exists;
 
 final class ValidatorChainTest extends TestCase
@@ -55,7 +57,7 @@ final class ValidatorChainTest extends TestCase
 
     private function createValidatorSpy(): ValidatorInterface
     {
-        return new class implements ValidatorInterface {
+        return new class () implements ValidatorInterface {
             /** @var int */
             public static $isValidCallCount = 0;
 

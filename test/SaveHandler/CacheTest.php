@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\SaveHandler;
 
+use function is_string;
+
 use Laminas\Cache\Storage\StorageInterface;
 use Laminas\Session\SaveHandler\Cache;
 use PHPUnit\Framework\Attributes\CoversClass;
+
 use PHPUnit\Framework\TestCase;
 
-use function is_string;
 use function serialize;
 use function unserialize;
 use function var_export;

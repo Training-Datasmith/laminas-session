@@ -4,12 +4,14 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\SaveHandler;
 
+use function getenv;
+
 use Laminas\Session\Exception\InvalidArgumentException;
 use Laminas\Session\SaveHandler\MongoDBOptions;
 use PHPUnit\Framework\Attributes\CoversClass;
+
 use PHPUnit\Framework\TestCase;
 
-use function getenv;
 use function phpversion;
 use function version_compare;
 

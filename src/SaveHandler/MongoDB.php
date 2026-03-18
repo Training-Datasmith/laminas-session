@@ -1,19 +1,25 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\SaveHandler;
 
+use function array_replace;
+use function floor;
+use function ini_get;
+
 use Laminas\Session\Exception\InvalidArgumentException;
+
+use function microtime;
+
 use MongoDB\BSON\Binary;
 use MongoDB\BSON\Int64;
+
 use MongoDB\BSON\UTCDateTime;
 use MongoDB\Client as MongoClient;
 use MongoDB\Collection as MongoCollection;
 use ReturnTypeWillChange;
 
-use function array_replace;
-use function floor;
-use function ini_get;
-use function microtime;
 use function time;
 
 /**

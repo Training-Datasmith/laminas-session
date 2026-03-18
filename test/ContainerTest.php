@@ -12,10 +12,13 @@ use Laminas\Session\Container;
 use Laminas\Session\Exception\InvalidArgumentException;
 use Laminas\Session\ManagerInterface as Manager;
 use Laminas\Session\Storage\SessionArrayStorage;
-use PHPUnit\Framework\Attributes\CoversClass;
-use PHPUnit\Framework\TestCase;
 
 use function microtime;
+
+use PHPUnit\Framework\Attributes\CoversClass;
+
+use PHPUnit\Framework\TestCase;
+
 use function sleep;
 use function time;
 

@@ -1,15 +1,17 @@
 <?php
 
-namespace Laminas\Session\Config;
+declare(strict_types=1);
 
-use Laminas\Session\Exception;
-use Laminas\Validator\Hostname as HostnameValidator;
-use Traversable;
+namespace Laminas\Session\Config;
 
 use function array_key_exists;
 use function array_merge;
 use function array_shift;
+
 use function assert;
+
+use const E_USER_DEPRECATED;
+
 use function implode;
 use function is_array;
 use function is_dir;
@@ -17,20 +19,26 @@ use function is_numeric;
 use function is_readable;
 use function is_string;
 use function is_writable;
+
+use Laminas\Session\Exception;
+use Laminas\Validator\Hostname as HostnameValidator;
+
 use function method_exists;
 use function parse_url;
+
+use const PHP_URL_PATH;
+
 use function preg_replace;
 use function sprintf;
 use function str_replace;
 use function str_starts_with;
 use function strtolower;
 use function substr;
+
+use Traversable;
+
 use function trigger_error;
 use function ucwords;
-
-use const E_USER_DEPRECATED;
-use const PHP_URL_PATH;
-use const PHP_VERSION_ID;
 
 /**
  * Standard session configuration

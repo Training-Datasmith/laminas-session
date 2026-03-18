@@ -1,17 +1,21 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\Validator;
 
 use function assert;
 use function ini_get;
 use function is_numeric;
 use function is_string;
+
+use const PHP_VERSION_ID;
+
 use function preg_match;
 use function session_id;
 use function strrpos;
-use function substr;
 
-use const PHP_VERSION_ID;
+use function substr;
 
 /**
  * session_id validator

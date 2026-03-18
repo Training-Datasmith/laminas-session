@@ -4,20 +4,22 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\SaveHandler;
 
+use function getenv;
+use function ini_get;
+use function ini_set;
+use function is_string;
+
 use Laminas\Session\SaveHandler\MongoDB;
 use Laminas\Session\SaveHandler\MongoDBOptions;
 use MongoDB\Client as MongoClient;
 use MongoDB\Collection as MongoCollection;
 use MongoDB\Driver\Exception\RuntimeException;
+
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\RequiresPhpExtension;
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
-use function getenv;
-use function ini_get;
-use function ini_set;
-use function is_string;
 use function serialize;
 use function sleep;
 use function unserialize;

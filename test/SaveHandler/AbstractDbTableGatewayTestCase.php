@@ -4,14 +4,17 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\SaveHandler;
 
+use function is_string;
+
 use Laminas\Db\Adapter\Adapter;
 use Laminas\Db\TableGateway\TableGateway;
 use Laminas\Session\SaveHandler\DbTableGateway;
 use Laminas\Session\SaveHandler\DbTableGatewayOptions;
+
+use function microtime;
+
 use PHPUnit\Framework\TestCase;
 
-use function is_string;
-use function microtime;
 use function serialize;
 use function unserialize;
 use function var_export;

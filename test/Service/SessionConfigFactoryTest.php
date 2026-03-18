@@ -4,6 +4,9 @@ declare(strict_types=1);
 
 namespace LaminasTest\Session\Service;
 
+use function ini_get;
+use function ini_set;
+
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Laminas\ServiceManager\ServiceManager;
 use Laminas\Session\Config\ConfigInterface;
@@ -13,18 +16,19 @@ use Laminas\Session\SaveHandler\SaveHandlerInterface;
 use Laminas\Session\Service\SessionConfigFactory;
 use LaminasTest\Session\TestAsset\TestConfig;
 use LaminasTest\Session\TestAsset\TestSaveHandler;
+
+use const PHP_SESSION_ACTIVE;
+
 use PHPUnit\Framework\Attributes\CoversClass;
+
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 use Psr\Container\ContainerInterface;
 
-use function ini_get;
-use function ini_set;
 use function session_save_path;
 use function session_status;
-use function session_write_close;
 
-use const PHP_SESSION_ACTIVE;
+use function session_write_close;
 
 #[CoversClass(SessionConfigFactory::class)]
 final class SessionConfigFactoryTest extends TestCase

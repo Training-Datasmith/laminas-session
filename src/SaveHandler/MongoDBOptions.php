@@ -1,11 +1,15 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\SaveHandler;
 
+use function is_array;
+
 use Laminas\Session\Exception\InvalidArgumentException;
+
 use Laminas\Stdlib\AbstractOptions;
 
-use function is_array;
 use function phpversion;
 use function strlen;
 use function strtolower;

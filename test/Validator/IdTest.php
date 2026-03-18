@@ -1,18 +1,25 @@
-<?php // phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.MismatchingCaseSensitivity
+<?php
+
+declare(strict_types=1);
+// phpcs:disable SlevomatCodingStandard.Namespaces.UnusedUses.MismatchingCaseSensitivity
 
 namespace LaminasTest\Session\Validator;
 
+use function ini_set;
+
 use Laminas\Session\Validator\Id;
+
+use const PHP_VERSION_ID;
+
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\Attributes\IgnoreDeprecations;
+
 use PHPUnit\Framework\Attributes\RunInSeparateProcess;
 use PHPUnit\Framework\TestCase;
 
-use function ini_set;
 use function session_id;
-use function session_start;
 
-use const PHP_VERSION_ID;
+use function session_start;
 
 final class IdTest extends TestCase
 {

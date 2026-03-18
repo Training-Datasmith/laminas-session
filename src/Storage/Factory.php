@@ -1,21 +1,28 @@
-<?php // phpcs:disable WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix,Generic.NamingConventions.ConstructorName.OldStyle
+<?php
+
+declare(strict_types=1);
+// phpcs:disable WebimpressCodingStandard.NamingConventions.AbstractClass.Prefix,Generic.NamingConventions.ConstructorName.OldStyle
 
 namespace Laminas\Session\Storage;
 
 use ArrayAccess;
-use Laminas\Session\Exception;
-use Laminas\Stdlib\ArrayObject;
-use Laminas\Stdlib\ArrayUtils;
-use Traversable;
 
 use function class_exists;
 use function class_implements;
 use function class_parents;
 use function get_debug_type;
+
 use function in_array;
 use function is_array;
 use function is_string;
+
+use Laminas\Session\Exception;
+use Laminas\Stdlib\ArrayObject;
+use Laminas\Stdlib\ArrayUtils;
+
 use function sprintf;
+
+use Traversable;
 
 abstract class Factory
 {

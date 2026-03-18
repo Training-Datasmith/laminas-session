@@ -1,18 +1,25 @@
 <?php
 
-namespace Laminas\Session\Storage;
+declare(strict_types=1);
 
-use ArrayIterator;
-use Laminas\Session\Exception;
-use Laminas\Stdlib\ArrayObject;
-use ReturnTypeWillChange;
+namespace Laminas\Session\Storage;
 
 use function array_flip;
 use function array_key_exists;
 use function array_keys;
 use function array_replace_recursive;
+
+use ArrayIterator;
+
 use function is_array;
+
+use Laminas\Session\Exception;
+use Laminas\Stdlib\ArrayObject;
+
 use function microtime;
+
+use ReturnTypeWillChange;
+
 use function sprintf;
 
 /**

@@ -1,18 +1,23 @@
 <?php
 
+declare(strict_types=1);
+
 namespace Laminas\Session\Service;
 
 // phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
 
 use Interop\Container\ContainerInterface;
+
+use function is_array;
+
 use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
 use Laminas\ServiceManager\FactoryInterface;
 use Laminas\ServiceManager\ServiceLocatorInterface;
 use Laminas\Session\Exception\ExceptionInterface as SessionException;
 use Laminas\Session\Storage\Factory;
+
 use Laminas\Session\Storage\StorageInterface;
 
-use function is_array;
 use function sprintf;
 
 /**
