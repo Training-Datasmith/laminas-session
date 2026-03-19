@@ -183,7 +183,7 @@ abstract class AbstractSessionArrayStorage implements
      */
     public function unserialize($session)
     {
-        return unserialize($session);
+        return unserialize($session, ['allowed_classes' => false]);
     }
 
     /** @inheritDoc */

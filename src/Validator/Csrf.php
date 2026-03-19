@@ -7,6 +7,7 @@ namespace Laminas\Session\Validator;
 use function assert;
 use function explode;
 
+use function hash_equals;
 use function is_array;
 use function is_string;
 
@@ -97,7 +98,7 @@ final class Csrf extends AbstractValidator
         $tokenFromValue = $this->getTokenFromHash($value);
         $tokenFromHash  = $this->getTokenFromHash($hash);
 
-        if ($tokenFromValue === null || $tokenFromHash === null || ($tokenFromValue !== $tokenFromHash)) {
+        if ($tokenFromValue === null || $tokenFromHash === null || ! hash_equals($tokenFromHash, $tokenFromValue)) {
             $this->error(self::NOT_SAME);
             return false;
         }
