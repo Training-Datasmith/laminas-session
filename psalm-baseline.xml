@@ -1635,8 +1635,8 @@
     </MixedArgument>
     <MixedArrayAccess>
       <code><![CDATA[$listener[0]]]></code>
-      <code><![CDATA[$validatorData[Validator\HttpUserAgent::class]]]></code>
-      <code><![CDATA[$validatorData[Validator\RemoteAddr::class]]]></code>
+      <code><![CDATA[$validatorData[Validator\Http_User_Agent::class]]]></code>
+      <code><![CDATA[$validatorData[Validator\Remote_Addr::class]]]></code>
     </MixedArrayAccess>
     <MixedAssignment>
       <code><![CDATA[$chain]]></code>

@@ -25,7 +25,7 @@ repo_url: 'https://github.com/laminas/laminas-session'
 extra:
     project: Components
     installation:
-      config_provider_class: 'Laminas\Session\ConfigProvider'
+      config_provider_class: 'Laminas\Session\Config_Provider'
       module_class: 'Laminas\Session\Module'
     current_version: v2
     versions:
