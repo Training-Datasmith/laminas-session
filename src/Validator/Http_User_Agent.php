@@ -39,18 +39,20 @@ class Http_User_Agent implements Validator_Interface
         return $user_agent === $this->get_data();
     }
     /**
-     * Retrieve token for validating call
+     * Retrieve the User-Agent string captured at session start.
      *
-     * @deprecated This method will be removed in version 3.0
-     *
-     * @return string
+     * @deprecated This method will be removed in version 3.0; access the stored UA string another way.
+     * @return string|null The captured HTTP_USER_AGENT value, or null if none was available.
      */
-    public function get_data()
+    public function get_data(): ?string
     {
         return $this->data;
     }
+
     /**
-     * Return validator name
+     * Return the fully-qualified class name as the validator identifier.
+     *
+     * @return string The validator name (FQCN of this class).
      */
     public function get_name(): string
     {
