@@ -1,56 +1,48 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Laminas\Session\SaveHandler;
+declare (strict_types=1);
+namespace Laminas\Session\Save_Handler;
 
 use Laminas\Session\Exception;
-use Laminas\Stdlib\AbstractOptions;
-
+use Laminas\Stdlib\Abstract_Options;
 use function strlen;
-
 /**
  * DbTableGateway Save Handler Options
  *
  * @deprecated This class will be removed without replacement in version 3.0.
  */
-class DbTableGatewayOptions extends AbstractOptions
+class Db_Table_Gateway_Options extends Abstract_Options
 {
     /**
      * ID Column
      *
      * @var string
      */
-    protected $idColumn = 'id';
-
+    protected $id_column = 'id';
     /**
      * Name Column
      *
      * @var string
      */
-    protected $nameColumn = 'name';
-
+    protected $name_column = 'name';
     /**
      * Data Column
      *
      * @var string
      */
-    protected $dataColumn = 'data';
-
+    protected $data_column = 'data';
     /**
      * Lifetime Column
      *
      * @var string
      */
-    protected $lifetimeColumn = 'lifetime';
-
+    protected $lifetime_column = 'lifetime';
     /**
      * Modified Column
      *
      * @var string
      */
-    protected $modifiedColumn = 'modified';
-
+    protected $modified_column = 'modified';
     /**
      * Set Id Column
      *
@@ -58,26 +50,24 @@ class DbTableGatewayOptions extends AbstractOptions
      * @return DbTableGatewayOptions
      * @throws Exception\InvalidArgumentException
      */
-    public function setIdColumn($idColumn)
+    public function set_id_column($id_column)
     {
-        $idColumn = (string) $idColumn;
-        if (strlen($idColumn) === 0) {
+        $id_column = (string) $id_column;
+        if (strlen($id_column) === 0) {
             throw new Exception\InvalidArgumentException('$idColumn must be a non-empty string');
         }
-        $this->idColumn = $idColumn;
+        $this->id_column = $id_column;
         return $this;
     }
-
     /**
      * Get Id Column
      *
      * @return string
      */
-    public function getIdColumn()
+    public function get_id_column()
     {
-        return $this->idColumn;
+        return $this->id_column;
     }
-
     /**
      * Set Name Column
      *
@@ -85,26 +75,24 @@ class DbTableGatewayOptions extends AbstractOptions
      * @return DbTableGatewayOptions
      * @throws Exception\InvalidArgumentException
      */
-    public function setNameColumn($nameColumn)
+    public function set_name_column($name_column)
     {
-        $nameColumn = (string) $nameColumn;
-        if (strlen($nameColumn) === 0) {
+        $name_column = (string) $name_column;
+        if (strlen($name_column) === 0) {
             throw new Exception\InvalidArgumentException('$nameColumn must be a non-empty string');
         }
-        $this->nameColumn = $nameColumn;
+        $this->name_column = $name_column;
         return $this;
     }
-
     /**
      * Get Name Column
      *
      * @return string
      */
-    public function getNameColumn()
+    public function get_name_column()
     {
-        return $this->nameColumn;
+        return $this->name_column;
     }
-
     /**
      * Set Data Column
      *
@@ -112,26 +100,24 @@ class DbTableGatewayOptions extends AbstractOptions
      * @return DbTableGatewayOptions
      * @throws Exception\InvalidArgumentException
      */
-    public function setDataColumn($dataColumn)
+    public function set_data_column($data_column)
     {
-        $dataColumn = (string) $dataColumn;
-        if (strlen($dataColumn) === 0) {
+        $data_column = (string) $data_column;
+        if (strlen($data_column) === 0) {
             throw new Exception\InvalidArgumentException('$dataColumn must be a non-empty string');
         }
-        $this->dataColumn = $dataColumn;
+        $this->data_column = $data_column;
         return $this;
     }
-
     /**
      * Get Data Column
      *
      * @return string
      */
-    public function getDataColumn()
+    public function get_data_column()
     {
-        return $this->dataColumn;
+        return $this->data_column;
     }
-
     /**
      * Set Lifetime Column
      *
@@ -139,26 +125,24 @@ class DbTableGatewayOptions extends AbstractOptions
      * @return DbTableGatewayOptions
      * @throws Exception\InvalidArgumentException
      */
-    public function setLifetimeColumn($lifetimeColumn)
+    public function set_lifetime_column($lifetime_column)
     {
-        $lifetimeColumn = (string) $lifetimeColumn;
-        if (strlen($lifetimeColumn) === 0) {
+        $lifetime_column = (string) $lifetime_column;
+        if (strlen($lifetime_column) === 0) {
             throw new Exception\InvalidArgumentException('$lifetimeColumn must be a non-empty string');
         }
-        $this->lifetimeColumn = $lifetimeColumn;
+        $this->lifetime_column = $lifetime_column;
         return $this;
     }
-
     /**
      * Get Lifetime Column
      *
      * @return string
      */
-    public function getLifetimeColumn()
+    public function get_lifetime_column()
     {
-        return $this->lifetimeColumn;
+        return $this->lifetime_column;
     }
-
     /**
      * Set Modified Column
      *
@@ -166,23 +150,22 @@ class DbTableGatewayOptions extends AbstractOptions
      * @return DbTableGatewayOptions
      * @throws Exception\InvalidArgumentException
      */
-    public function setModifiedColumn($modifiedColumn)
+    public function set_modified_column($modified_column)
     {
-        $modifiedColumn = (string) $modifiedColumn;
-        if (strlen($modifiedColumn) === 0) {
+        $modified_column = (string) $modified_column;
+        if (strlen($modified_column) === 0) {
             throw new Exception\InvalidArgumentException('$modifiedColumn must be a non-empty string');
         }
-        $this->modifiedColumn = $modifiedColumn;
+        $this->modified_column = $modified_column;
         return $this;
     }
-
     /**
      * Get Modified Column
      *
      * @return string
      */
-    public function getModifiedColumn()
+    public function get_modified_column()
     {
-        return $this->modifiedColumn;
+        return $this->modified_column;
     }
 }

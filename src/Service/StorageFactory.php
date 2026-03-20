@@ -1,29 +1,22 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Service;
 
 // phpcs:disable WebimpressCodingStandard.PHP.CorrectClassNameCase
-
-use Interop\Container\ContainerInterface;
-
+use Interop\Container\Container_Interface;
 use function is_array;
-
-use Laminas\ServiceManager\Exception\ServiceNotCreatedException;
-use Laminas\ServiceManager\FactoryInterface;
-use Laminas\ServiceManager\ServiceLocatorInterface;
-use Laminas\Session\Exception\ExceptionInterface as SessionException;
+use Laminas\Service_Manager\Exception\Service_Not_Created_Exception;
+use Laminas\Service_Manager\Factory_Interface;
+use Laminas\Service_Manager\Service_Locator_Interface;
+use Laminas\Session\Exception\Exception_Interface as SessionException;
 use Laminas\Session\Storage\Factory;
-
-use Laminas\Session\Storage\StorageInterface;
-
+use Laminas\Session\Storage\Storage_Interface;
 use function sprintf;
-
 /**
  * @final
  */
-class StorageFactory implements FactoryInterface
+class Storage_Factory implements Factory_Interface
 {
     /**
      * Create session storage object (v3 usage).
@@ -38,36 +31,25 @@ class StorageFactory implements FactoryInterface
      * @throws ServiceNotCreatedException If session_storage is missing, or the
      *         factory cannot create the storage instance.
      */
-    public function __invoke(ContainerInterface $container, $requestedName, ?array $options = null)
+    public function __invoke(Container_Interface $container, $requested_name, ?array $options = null)
     {
         $config = $container->get('config');
-        if (! isset($config['session_storage']) || ! is_array($config['session_storage'])) {
-            throw new ServiceNotCreatedException(
-                'Configuration is missing a "session_storage" key, or the value of that key is not an array'
-            );
+        if (!isset($config['session_storage']) || !is_array($config['session_storage'])) {
+            throw new Service_Not_Created_Exception('Configuration is missing a "session_storage" key, or the value of that key is not an array');
         }
-
         $config = $config['session_storage'];
-        if (! isset($config['type'])) {
-            throw new ServiceNotCreatedException(
-                '"session_storage" configuration is missing a "type" key'
-            );
+        if (!isset($config['type'])) {
+            throw new Service_Not_Created_Exception('"session_storage" configuration is missing a "type" key');
         }
-        $type    = $config['type'];
+        $type = $config['type'];
         $options = $config['options'] ?? [];
-
         try {
             $storage = Factory::factory($type, $options);
-        } catch (SessionException $e) {
-            throw new ServiceNotCreatedException(sprintf(
-                'Factory is unable to create StorageInterface instance: %s',
-                $e->getMessage()
-            ), $e->getCode(), $e);
+        } catch (Session_Exception $e) {
+            throw new Service_Not_Created_Exception(sprintf('Factory is unable to create StorageInterface instance: %s', $e->get_message()), $e->get_code(), $e);
         }
-
         return $storage;
     }
-
     /**
      * @deprecated This method will be removed in version 3.0
      * Create and return a storage instance (v2 usage).
@@ -76,11 +58,8 @@ class StorageFactory implements FactoryInterface
      * @param string $requestedName
      * @return StorageInterface
      */
-    public function createService(
-        ServiceLocatorInterface $services,
-        $canonicalName = null,
-        $requestedName = StorageInterface::class
-    ) {
-        return $this($services, $requestedName);
+    public function create_service(Service_Locator_Interface $services, $canonical_name = null, $requested_name = Storage_Interface::class)
+    {
+        return $this($services, $requested_name);
     }
 }

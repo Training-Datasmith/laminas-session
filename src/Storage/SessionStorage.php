@@ -1,15 +1,11 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Storage;
 
 use ArrayIterator;
-
 use function is_object;
-
 use Laminas\Stdlib\ArrayObject;
-
 /**
  * Session storage in $_SESSION
  *
@@ -20,7 +16,7 @@ use Laminas\Stdlib\ArrayObject;
  * @template TValue
  * @template-extends ArrayStorage<TKey, TValue>
  */
-class SessionStorage extends ArrayStorage
+class Session_Storage extends Array_Storage
 {
     /**
      * Constructor
@@ -32,27 +28,22 @@ class SessionStorage extends ArrayStorage
      * @param int        $flags
      * @param string     $iteratorClass
      */
-    public function __construct(
-        $input = null,
-        $flags = ArrayObject::ARRAY_AS_PROPS,
-        $iteratorClass = ArrayIterator::class
-    ) {
-        $resetSession = true;
-        if ((null === $input) && isset($_SESSION)) {
+    public function __construct($input = null, $flags = ArrayObject::ARRAY_AS_PROPS, $iterator_class = ArrayIterator::class)
+    {
+        $reset_session = true;
+        if (null === $input && isset($_SESSION)) {
             $input = $_SESSION;
             if (is_object($input) && $_SESSION instanceof ArrayObject) {
-                $resetSession = false;
-            } elseif (is_object($input) && ! $_SESSION instanceof ArrayObject) {
+                $reset_session = false;
+            } elseif (is_object($input) && !$_SESSION instanceof ArrayObject) {
                 $input = (array) $input;
             }
         } elseif (null === $input) {
             $input = [];
         }
-
-        parent::__construct($input, $flags, $iteratorClass);
+        parent::__construct($input, $flags, $iterator_class);
         $_SESSION = $this;
     }
-
     /**
      * Destructor
      *
@@ -61,9 +52,8 @@ class SessionStorage extends ArrayStorage
      */
     public function __destruct()
     {
-        $_SESSION = (array) $this->getArrayCopy();
+        $_SESSION = (array) $this->get_array_copy();
     }
-
     /**
      * Load session object from an existing array
      *
@@ -72,30 +62,26 @@ class SessionStorage extends ArrayStorage
      * @param array<TKey, TValue> $array
      * @return $this
      */
-    public function fromArray(array $array): static
+    public function from_array(array $array): static
     {
-        parent::fromArray($array);
+        parent::from_array($array);
         $_SESSION = $this;
-
         return $this;
     }
-
     /**
      * Mark object as isImmutable
      *
      * @return $this
      */
-    public function markImmutable(): static
+    public function mark_immutable(): static
     {
         $this['_IMMUTABLE'] = true;
-
         return $this;
     }
-
     /**
      * Determine if this object is isImmutable
      */
-    public function isImmutable(): bool
+    public function is_immutable(): bool
     {
         return isset($this['_IMMUTABLE']) && $this['_IMMUTABLE'];
     }

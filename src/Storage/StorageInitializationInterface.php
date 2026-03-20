@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Storage;
 
 /**
@@ -10,7 +9,7 @@ namespace Laminas\Session\Storage;
  * Defines the minimum requirements for handling userland, in-script session
  * storage (e.g., the $_SESSION superglobal array).
  */
-interface StorageInitializationInterface
+interface Storage_Initialization_Interface
 {
     /**
      * Initialize Session Storage

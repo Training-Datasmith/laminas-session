@@ -1,18 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Laminas\Session\SaveHandler;
+declare (strict_types=1);
+namespace Laminas\Session\Save_Handler;
 
 use function ini_get;
-
-use Laminas\Db\TableGateway\TableGateway;
-
-use ReturnTypeWillChange;
-
+use Laminas\Db\Table_Gateway\Table_Gateway;
+use Return_Type_Will_Change;
 use function sprintf;
 use function time;
-
 /**
  * DB Table Gateway session save handler
  *
@@ -20,29 +15,26 @@ use function time;
  *
  * @see ReturnTypeWillChange
  */
-class DbTableGateway implements SaveHandlerInterface
+class Db_Table_Gateway implements Save_Handler_Interface
 {
     /**
      * Session Save Path
      *
      * @var string
      */
-    protected $sessionSavePath;
-
+    protected $session_save_path;
     /**
      * Session Name
      *
      * @var string
      */
-    protected $sessionName;
-
+    protected $session_name;
     /**
      * Lifetime
      *
      * @var int
      */
     protected $lifetime;
-
     /**
      * Constructor
      */
@@ -50,14 +42,14 @@ class DbTableGateway implements SaveHandlerInterface
         /**
          * Laminas Db Table Gateway
          */
-        protected TableGateway $tableGateway,
+        protected Table_Gateway $table_gateway,
         /**
          * DbTableGateway Options
          */
-        protected DbTableGatewayOptions $options
-    ) {
+        protected Db_Table_Gateway_Options $options
+    )
+    {
     }
-
     /**
      * Open Session
      *
@@ -65,27 +57,24 @@ class DbTableGateway implements SaveHandlerInterface
      * @param  string $name
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function open($path, $name)
     {
-        $this->sessionSavePath = $path;
-        $this->sessionName     = $name;
-        $this->lifetime        = ini_get('session.gc_maxlifetime');
-
+        $this->session_save_path = $path;
+        $this->session_name = $name;
+        $this->lifetime = ini_get('session.gc_maxlifetime');
         return true;
     }
-
     /**
      * Close session
      *
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function close()
     {
         return true;
     }
-
     /**
      * Read session data
      *
@@ -93,28 +82,20 @@ class DbTableGateway implements SaveHandlerInterface
      * @param bool $destroyExpired Optional; true by default
      * @return string
      */
-    #[ReturnTypeWillChange]
-    public function read($id, $destroyExpired = true)
+    #[Return_Type_Will_Change]
+    public function read($id, $destroy_expired = true)
     {
-        $row = $this->tableGateway->select([
-            $this->options->getIdColumn()   => $id,
-            $this->options->getNameColumn() => $this->sessionName,
-        ])->current();
-
+        $row = $this->table_gateway->select([$this->options->get_id_column() => $id, $this->options->get_name_column() => $this->session_name])->current();
         if ($row) {
-            if (
-                $row->{$this->options->getModifiedColumn()} +
-                $row->{$this->options->getLifetimeColumn()} > time()
-            ) {
-                return (string) $row->{$this->options->getDataColumn()};
+            if ($row->{$this->options->get_modified_column()} + $row->{$this->options->get_lifetime_column()} > time()) {
+                return (string) $row->{$this->options->get_data_column()};
             }
-            if ($destroyExpired) {
+            if ($destroy_expired) {
                 $this->destroy($id);
             }
         }
         return '';
     }
-
     /**
      * Write session data
      *
@@ -122,65 +103,41 @@ class DbTableGateway implements SaveHandlerInterface
      * @param string $data
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function write($id, $data)
     {
-        $data = [
-            $this->options->getModifiedColumn() => time(),
-            $this->options->getDataColumn()     => (string) $data,
-        ];
-
-        $rows = $this->tableGateway->select([
-            $this->options->getIdColumn()   => $id,
-            $this->options->getNameColumn() => $this->sessionName,
-        ])->current();
-
+        $data = [$this->options->get_modified_column() => time(), $this->options->get_data_column() => (string) $data];
+        $rows = $this->table_gateway->select([$this->options->get_id_column() => $id, $this->options->get_name_column() => $this->session_name])->current();
         if ($rows) {
-            return (bool) $this->tableGateway->update($data, [
-                $this->options->getIdColumn()   => $id,
-                $this->options->getNameColumn() => $this->sessionName,
-            ]);
+            return (bool) $this->table_gateway->update($data, [$this->options->get_id_column() => $id, $this->options->get_name_column() => $this->session_name]);
         }
-        $data[$this->options->getLifetimeColumn()] = $this->lifetime;
-        $data[$this->options->getIdColumn()]       = $id;
-        $data[$this->options->getNameColumn()]     = $this->sessionName;
-
-        return (bool) $this->tableGateway->insert($data);
+        $data[$this->options->get_lifetime_column()] = $this->lifetime;
+        $data[$this->options->get_id_column()] = $id;
+        $data[$this->options->get_name_column()] = $this->session_name;
+        return (bool) $this->table_gateway->insert($data);
     }
-
     /**
      * Destroy session
      *
      * @param  string $id
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function destroy($id)
     {
-        $this->tableGateway->delete([
-            $this->options->getIdColumn()   => $id,
-            $this->options->getNameColumn() => $this->sessionName,
-        ]);
-
+        $this->table_gateway->delete([$this->options->get_id_column() => $id, $this->options->get_name_column() => $this->session_name]);
         return true;
     }
-
     /**
      * Garbage Collection
      *
      * @param int $maxlifetime
      * @return true
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function gc($maxlifetime)
     {
-        $platform = $this->tableGateway->getAdapter()->getPlatform();
-        return (bool) $this->tableGateway->delete(
-            sprintf(
-                '%s < %d',
-                $platform->quoteIdentifier($this->options->getModifiedColumn()),
-                time() - $this->lifetime
-            )
-        );
+        $platform = $this->table_gateway->get_adapter()->get_platform();
+        return (bool) $this->table_gateway->delete(sprintf('%s < %d', $platform->quote_identifier($this->options->get_modified_column()), time() - $this->lifetime));
     }
 }

@@ -1,17 +1,13 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Config;
 
 use function array_key_exists;
 use function array_merge;
 use function array_shift;
-
 use function assert;
-
 use const E_USER_DEPRECATED;
-
 use function implode;
 use function is_array;
 use function is_dir;
@@ -19,31 +15,24 @@ use function is_numeric;
 use function is_readable;
 use function is_string;
 use function is_writable;
-
 use Laminas\Session\Exception;
 use Laminas\Validator\Hostname as HostnameValidator;
-
 use function method_exists;
 use function parse_url;
-
 use const PHP_URL_PATH;
-
 use function preg_replace;
 use function sprintf;
 use function str_replace;
 use function str_starts_with;
 use function strtolower;
 use function substr;
-
 use Traversable;
-
 use function trigger_error;
 use function ucwords;
-
 /**
  * Standard session configuration
  */
-class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
+class Standard_Config implements Config_Interface, Same_Site_Cookie_Capable_Interface
 {
     /**
      * session.name
@@ -51,77 +40,66 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @var string
      */
     protected $name;
-
     /**
      * session.save_path
      *
      * @var string
      */
-    protected $savePath;
-
+    protected $save_path;
     /**
      * session.cookie_lifetime
      *
      * @var int
      */
-    protected $cookieLifetime;
-
+    protected $cookie_lifetime;
     /**
      * session.cookie_path
      *
      * @var string
      */
-    protected $cookiePath;
-
+    protected $cookie_path;
     /**
      * session.cookie_domain
      *
      * @var string
      */
-    protected $cookieDomain;
-
+    protected $cookie_domain;
     /**
      * session.cookie_samesite
      *
      * @var string
      */
-    protected $cookieSameSite;
-
+    protected $cookie_same_site;
     /**
      * session.cookie_secure
      *
      * @var bool
      */
-    protected $cookieSecure;
-
+    protected $cookie_secure;
     /**
      * session.cookie_httponly
      *
      * @var bool
      */
-    protected $cookieHttpOnly;
-
+    protected $cookie_http_only;
     /**
      * remember_me_seconds
      *
      * @var int
      */
-    protected $rememberMeSeconds;
-
+    protected $remember_me_seconds;
     /**
      * session.use_cookies
      *
      * @var bool
      */
-    protected $useCookies;
-
+    protected $use_cookies;
     /**
      * All options
      *
      * @var array
      */
     protected $options = [];
-
     /**
      * Set many options at once
      *
@@ -132,36 +110,30 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  array|Traversable $options
      * @throws Exception\InvalidArgumentException
      */
-    public function setOptions($options): static
+    public function set_options($options): static
     {
-        if (! is_array($options) && ! $options instanceof Traversable) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                'Parameter provided to %s must be an array or Traversable',
-                __METHOD__
-            ));
+        if (!is_array($options) && !$options instanceof Traversable) {
+            throw new Exception\InvalidArgumentException(sprintf('Parameter provided to %s must be an array or Traversable', __METHOD__));
         }
-
         foreach ($options as $key => $value) {
             $setter = 'set' . str_replace(' ', '', ucwords(str_replace('_', ' ', $key)));
             if (method_exists($this, $setter)) {
                 $this->{$setter}($value);
             } else {
-                $this->setOption($key, $value);
+                $this->set_option($key, $value);
             }
         }
         return $this;
     }
-
     /**
      * Get all options set
      *
      * @return array
      */
-    public function getOptions()
+    public function get_options()
     {
         return $this->options;
     }
-
     /**
      * Set an individual option
      *
@@ -171,14 +143,13 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  string $option
      * @param  mixed $value
      */
-    public function setOption($option, $value): static
+    public function set_option($option, $value): static
     {
-        $option                 = strtolower($option);
+        $option = strtolower($option);
         $this->options[$option] = $value;
-        $this->setStorageOption($option, $value);
+        $this->set_storage_option($option, $value);
         return $this;
     }
-
     /**
      * Get an individual option
      *
@@ -191,33 +162,29 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  string $option
      * @return mixed
      */
-    public function getOption($option)
+    public function get_option($option)
     {
         $option = strtolower($option);
         if (array_key_exists($option, $this->options)) {
             return $this->options[$option];
         }
-
-        $value = $this->getStorageOption($option);
+        $value = $this->get_storage_option($option);
         if (null !== $value) {
-            $this->setOption($option, $value);
+            $this->set_option($option, $value);
             return $value;
         }
-
         return null;
     }
-
     /**
      * Check to see if an internal option has been set for the key provided.
      *
      * @param  string $option
      */
-    public function hasOption($option): bool
+    public function has_option($option): bool
     {
         $option = strtolower($option);
         return array_key_exists($option, $this->options);
     }
-
     /**
      * Set storage option in backend configuration store
      *
@@ -227,11 +194,10 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  string $storageName
      * @param  mixed $storageValue
      */
-    public function setStorageOption($storageName, $storageValue): static
+    public function set_storage_option($storage_name, $storage_value): static
     {
         return $this;
     }
-
     /**
      * Retrieve a storage option from a backend configuration store
      *
@@ -240,333 +206,295 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  string $storageOption
      * @return mixed
      */
-    public function getStorageOption($storageOption)
+    public function get_storage_option($storage_option)
     {
     }
-
     /**
      * Set session.save_path
      *
      * @param  string $savePath
      * @throws Exception\InvalidArgumentException On invalid path.
      */
-    public function setSavePath($savePath): static
+    public function set_save_path($save_path): static
     {
-        if (! is_dir($savePath)) {
+        if (!is_dir($save_path)) {
             throw new Exception\InvalidArgumentException('Invalid save_path provided; not a directory');
         }
-        if (! is_writable($savePath)) {
+        if (!is_writable($save_path)) {
             throw new Exception\InvalidArgumentException('Invalid save_path provided; not writable');
         }
-
-        $this->savePath = $savePath;
-        $this->setStorageOption('save_path', $savePath);
+        $this->save_path = $save_path;
+        $this->set_storage_option('save_path', $save_path);
         return $this;
     }
-
     /**
      * Set session.save_path
      *
      * @return string|null
      */
-    public function getSavePath()
+    public function get_save_path()
     {
-        if (null === $this->savePath) {
-            $this->savePath = $this->getStorageOption('save_path');
+        if (null === $this->save_path) {
+            $this->save_path = $this->get_storage_option('save_path');
         }
-        return $this->savePath;
+        return $this->save_path;
     }
-
     /**
      * Set session.name
      *
      * @param  string $name
      * @throws Exception\InvalidArgumentException
      */
-    public function setName($name): static
+    public function set_name($name): static
     {
         $this->name = (string) $name;
         if (empty($this->name)) {
             throw new Exception\InvalidArgumentException('Invalid session name; cannot be empty');
         }
-        $this->setStorageOption('name', $this->name);
+        $this->set_storage_option('name', $this->name);
         return $this;
     }
-
     /**
      * Get session.name
      *
      * @return null|string
      */
-    public function getName()
+    public function get_name()
     {
         if (null === $this->name) {
-            $this->name = $this->getStorageOption('name');
+            $this->name = $this->get_storage_option('name');
         }
         return $this->name;
     }
-
     /**
      * Set session.gc_probability
      *
      * @param  int $gcProbability
      * @throws Exception\InvalidArgumentException
      */
-    public function setGcProbability($gcProbability): static
+    public function set_gc_probability($gc_probability): static
     {
-        if (! is_numeric($gcProbability)) {
+        if (!is_numeric($gc_probability)) {
             throw new Exception\InvalidArgumentException('Invalid gc_probability; must be numeric');
         }
-        $gcProbability = (int) $gcProbability;
-        if (0 > $gcProbability || 100 < $gcProbability) {
+        $gc_probability = (int) $gc_probability;
+        if (0 > $gc_probability || 100 < $gc_probability) {
             throw new Exception\InvalidArgumentException('Invalid gc_probability; must be a percentage');
         }
-        $this->setOption('gc_probability', $gcProbability);
-        $this->setStorageOption('gc_probability', $gcProbability);
+        $this->set_option('gc_probability', $gc_probability);
+        $this->set_storage_option('gc_probability', $gc_probability);
         return $this;
     }
-
     /**
      * Get session.gc_probability
      *
      * @return int
      */
-    public function getGcProbability()
+    public function get_gc_probability()
     {
-        if (! isset($this->options['gc_probability'])) {
-            $this->options['gc_probability'] = $this->getStorageOption('gc_probability');
+        if (!isset($this->options['gc_probability'])) {
+            $this->options['gc_probability'] = $this->get_storage_option('gc_probability');
         }
-
         return $this->options['gc_probability'];
     }
-
     /**
      * Set session.gc_divisor
      *
      * @param  int $gcDivisor
      * @throws Exception\InvalidArgumentException
      */
-    public function setGcDivisor($gcDivisor): static
+    public function set_gc_divisor($gc_divisor): static
     {
-        if (! is_numeric($gcDivisor)) {
+        if (!is_numeric($gc_divisor)) {
             throw new Exception\InvalidArgumentException('Invalid gc_divisor; must be numeric');
         }
-        $gcDivisor = (int) $gcDivisor;
-        if (1 > $gcDivisor) {
+        $gc_divisor = (int) $gc_divisor;
+        if (1 > $gc_divisor) {
             throw new Exception\InvalidArgumentException('Invalid gc_divisor; must be a positive integer');
         }
-        $this->setOption('gc_divisor', $gcDivisor);
-        $this->setStorageOption('gc_divisor', $gcDivisor);
+        $this->set_option('gc_divisor', $gc_divisor);
+        $this->set_storage_option('gc_divisor', $gc_divisor);
         return $this;
     }
-
     /**
      * Get session.gc_divisor
      *
      * @return int
      */
-    public function getGcDivisor()
+    public function get_gc_divisor()
     {
-        if (! isset($this->options['gc_divisor'])) {
-            $this->options['gc_divisor'] = $this->getStorageOption('gc_divisor');
+        if (!isset($this->options['gc_divisor'])) {
+            $this->options['gc_divisor'] = $this->get_storage_option('gc_divisor');
         }
-
         return $this->options['gc_divisor'];
     }
-
     /**
      * Set gc_maxlifetime
      *
      * @param  int $gcMaxlifetime
      * @throws Exception\InvalidArgumentException
      */
-    public function setGcMaxlifetime($gcMaxlifetime): static
+    public function set_gc_maxlifetime($gc_maxlifetime): static
     {
-        if (! is_numeric($gcMaxlifetime)) {
+        if (!is_numeric($gc_maxlifetime)) {
             throw new Exception\InvalidArgumentException('Invalid gc_maxlifetime; must be numeric');
         }
-
-        $gcMaxlifetime = (int) $gcMaxlifetime;
-        if (1 > $gcMaxlifetime) {
+        $gc_maxlifetime = (int) $gc_maxlifetime;
+        if (1 > $gc_maxlifetime) {
             throw new Exception\InvalidArgumentException('Invalid gc_maxlifetime; must be a positive integer');
         }
-
-        $this->setOption('gc_maxlifetime', $gcMaxlifetime);
-        $this->setStorageOption('gc_maxlifetime', $gcMaxlifetime);
+        $this->set_option('gc_maxlifetime', $gc_maxlifetime);
+        $this->set_storage_option('gc_maxlifetime', $gc_maxlifetime);
         return $this;
     }
-
     /**
      * Get session.gc_maxlifetime
      *
      * @return int
      */
-    public function getGcMaxlifetime()
+    public function get_gc_maxlifetime()
     {
-        if (! isset($this->options['gc_maxlifetime'])) {
-            $this->options['gc_maxlifetime'] = $this->getStorageOption('gc_maxlifetime');
+        if (!isset($this->options['gc_maxlifetime'])) {
+            $this->options['gc_maxlifetime'] = $this->get_storage_option('gc_maxlifetime');
         }
-
         return $this->options['gc_maxlifetime'];
     }
-
     /**
      * Set session.cookie_lifetime
      *
      * @param  int $cookieLifetime
      * @throws Exception\InvalidArgumentException
      */
-    public function setCookieLifetime($cookieLifetime): static
+    public function set_cookie_lifetime($cookie_lifetime): static
     {
-        if (! is_numeric($cookieLifetime)) {
+        if (!is_numeric($cookie_lifetime)) {
             throw new Exception\InvalidArgumentException('Invalid cookie_lifetime; must be numeric');
         }
-        if (0 > $cookieLifetime) {
-            throw new Exception\InvalidArgumentException(
-                'Invalid cookie_lifetime; must be a positive integer or zero'
-            );
+        if (0 > $cookie_lifetime) {
+            throw new Exception\InvalidArgumentException('Invalid cookie_lifetime; must be a positive integer or zero');
         }
-
-        $this->cookieLifetime = (int) $cookieLifetime;
-        $this->setStorageOption('cookie_lifetime', $this->cookieLifetime);
+        $this->cookie_lifetime = (int) $cookie_lifetime;
+        $this->set_storage_option('cookie_lifetime', $this->cookie_lifetime);
         return $this;
     }
-
     /**
      * Get session.cookie_lifetime
      *
      * @return int
      */
-    public function getCookieLifetime()
+    public function get_cookie_lifetime()
     {
-        if (null === $this->cookieLifetime) {
-            $this->cookieLifetime = $this->getStorageOption('cookie_lifetime');
+        if (null === $this->cookie_lifetime) {
+            $this->cookie_lifetime = $this->get_storage_option('cookie_lifetime');
         }
-        return $this->cookieLifetime;
+        return $this->cookie_lifetime;
     }
-
     /**
      * Set session.cookie_path
      *
      * @param  string $cookiePath
      * @throws Exception\InvalidArgumentException
      */
-    public function setCookiePath($cookiePath): static
+    public function set_cookie_path($cookie_path): static
     {
-        $path = parse_url($cookiePath, PHP_URL_PATH);
-
+        $path = parse_url($cookie_path, PHP_URL_PATH);
         assert(is_string($path));
-
-        if ($path !== $cookiePath || ! str_starts_with($path, '/')) {
+        if ($path !== $cookie_path || !str_starts_with($path, '/')) {
             throw new Exception\InvalidArgumentException('Invalid cookie path');
         }
-
-        $this->cookiePath = $cookiePath;
-        $this->setStorageOption('cookie_path', $cookiePath);
+        $this->cookie_path = $cookie_path;
+        $this->set_storage_option('cookie_path', $cookie_path);
         return $this;
     }
-
     /**
      * Get session.cookie_path
      *
      * @return string
      */
-    public function getCookiePath()
+    public function get_cookie_path()
     {
-        if (null === $this->cookiePath) {
-            $this->cookiePath = $this->getStorageOption('cookie_path');
+        if (null === $this->cookie_path) {
+            $this->cookie_path = $this->get_storage_option('cookie_path');
         }
-        return $this->cookiePath;
+        return $this->cookie_path;
     }
-
     /**
      * Set session.cookie_domain
      *
      * @param  string $cookieDomain
      * @throws Exception\InvalidArgumentException
      */
-    public function setCookieDomain($cookieDomain): static
+    public function set_cookie_domain($cookie_domain): static
     {
-        if (! is_string($cookieDomain)) {
+        if (!is_string($cookie_domain)) {
             throw new Exception\InvalidArgumentException('Invalid cookie domain: must be a string');
         }
-
-        $validator = new HostnameValidator(HostnameValidator::ALLOW_ALL);
-
-        if (! empty($cookieDomain) && ! $validator->isValid($cookieDomain)) {
-            throw new Exception\InvalidArgumentException(
-                'Invalid cookie domain: ' . implode('; ', $validator->getMessages())
-            );
+        $validator = new Hostname_Validator(Hostname_Validator::ALLOW_ALL);
+        if (!empty($cookie_domain) && !$validator->is_valid($cookie_domain)) {
+            throw new Exception\InvalidArgumentException('Invalid cookie domain: ' . implode('; ', $validator->get_messages()));
         }
-
-        $this->cookieDomain = $cookieDomain;
-        $this->setStorageOption('cookie_domain', $cookieDomain);
+        $this->cookie_domain = $cookie_domain;
+        $this->set_storage_option('cookie_domain', $cookie_domain);
         return $this;
     }
-
     /**
      * Get session.cookie_domain
      *
      * @return string
      */
-    public function getCookieDomain()
+    public function get_cookie_domain()
     {
-        if (null === $this->cookieDomain) {
-            $this->cookieDomain = $this->getStorageOption('cookie_domain');
+        if (null === $this->cookie_domain) {
+            $this->cookie_domain = $this->get_storage_option('cookie_domain');
         }
-        return $this->cookieDomain;
+        return $this->cookie_domain;
     }
-
     /**
      * Set session.cookie_samesite
      *
      * @param  string $cookieSameSite
      */
-    public function setCookieSameSite($cookieSameSite): static
+    public function set_cookie_same_site($cookie_same_site): static
     {
-        $this->cookieSameSite = (string) $cookieSameSite;
-        $this->setStorageOption('cookie_samesite', $this->cookieSameSite);
+        $this->cookie_same_site = (string) $cookie_same_site;
+        $this->set_storage_option('cookie_samesite', $this->cookie_same_site);
         return $this;
     }
-
     /**
      * Get session.cookie_samesite
      *
      * @return string
      */
-    public function getCookieSameSite()
+    public function get_cookie_same_site()
     {
-        if (null === $this->cookieSameSite) {
-            $this->cookieSameSite = $this->getStorageOption('cookie_samesite');
+        if (null === $this->cookie_same_site) {
+            $this->cookie_same_site = $this->get_storage_option('cookie_samesite');
         }
-        return $this->cookieSameSite;
+        return $this->cookie_same_site;
     }
-
     /**
      * Set session.cookie_secure
      *
      * @param  bool $cookieSecure
      */
-    public function setCookieSecure($cookieSecure): static
+    public function set_cookie_secure($cookie_secure): static
     {
-        $this->cookieSecure = (bool) $cookieSecure;
-        $this->setStorageOption('cookie_secure', $this->cookieSecure);
+        $this->cookie_secure = (bool) $cookie_secure;
+        $this->set_storage_option('cookie_secure', $this->cookie_secure);
         return $this;
     }
-
     /**
      * Get session.cookie_secure
      *
      * @return bool|string
      */
-    public function getCookieSecure()
+    public function get_cookie_secure()
     {
-        if (null === $this->cookieSecure) {
-            $this->cookieSecure = $this->getStorageOption('cookie_secure');
+        if (null === $this->cookie_secure) {
+            $this->cookie_secure = $this->get_storage_option('cookie_secure');
         }
-        return $this->cookieSecure;
+        return $this->cookie_secure;
     }
-
     /**
      * Set session.cookie_httponly
      *
@@ -575,51 +503,47 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      *
      * @param  bool $cookieHttpOnly
      */
-    public function setCookieHttpOnly($cookieHttpOnly): static
+    public function set_cookie_http_only($cookie_http_only): static
     {
-        $this->cookieHttpOnly = (bool) $cookieHttpOnly;
-        $this->setStorageOption('cookie_httponly', $this->cookieHttpOnly);
+        $this->cookie_http_only = (bool) $cookie_http_only;
+        $this->set_storage_option('cookie_httponly', $this->cookie_http_only);
         return $this;
     }
-
     /**
      * Get session.cookie_httponly
      *
      * @return bool|string
      */
-    public function getCookieHttpOnly()
+    public function get_cookie_http_only()
     {
-        if (null === $this->cookieHttpOnly) {
-            $this->cookieHttpOnly = $this->getStorageOption('cookie_httponly');
+        if (null === $this->cookie_http_only) {
+            $this->cookie_http_only = $this->get_storage_option('cookie_httponly');
         }
-        return $this->cookieHttpOnly;
+        return $this->cookie_http_only;
     }
-
     /**
      * Set session.use_cookies
      *
      * @param  bool $useCookies
      */
-    public function setUseCookies($useCookies): static
+    public function set_use_cookies($use_cookies): static
     {
-        $this->useCookies = (bool) $useCookies;
-        $this->setStorageOption('use_cookies', $this->useCookies);
+        $this->use_cookies = (bool) $use_cookies;
+        $this->set_storage_option('use_cookies', $this->use_cookies);
         return $this;
     }
-
     /**
      * Get session.use_cookies
      *
      * @return bool
      */
-    public function getUseCookies()
+    public function get_use_cookies()
     {
-        if (null === $this->useCookies) {
-            $this->useCookies = $this->getStorageOption('use_cookies');
+        if (null === $this->use_cookies) {
+            $this->use_cookies = $this->get_storage_option('use_cookies');
         }
-        return $this->useCookies;
+        return $this->use_cookies;
     }
-
     /**
      * Set session.entropy_file
      *
@@ -628,22 +552,16 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  string $entropyFile
      * @throws Exception\InvalidArgumentException
      */
-    public function setEntropyFile($entropyFile): static
+    public function set_entropy_file($entropy_file): static
     {
         trigger_error('session.entropy_file is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        if (! is_readable($entropyFile)) {
-            throw new Exception\InvalidArgumentException(sprintf(
-                "Invalid entropy_file provided: '%s'; doesn't exist or not readable",
-                $entropyFile
-            ));
+        if (!is_readable($entropy_file)) {
+            throw new Exception\InvalidArgumentException(sprintf("Invalid entropy_file provided: '%s'; doesn't exist or not readable", $entropy_file));
         }
-
-        $this->setOption('entropy_file', $entropyFile);
-        $this->setStorageOption('entropy_file', $entropyFile);
+        $this->set_option('entropy_file', $entropy_file);
+        $this->set_storage_option('entropy_file', $entropy_file);
         return $this;
     }
-
     /**
      * Get session.entropy_file
      *
@@ -651,17 +569,14 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      *
      * @return string
      */
-    public function getEntropyFile()
+    public function get_entropy_file()
     {
         trigger_error('session.entropy_file is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        if (! isset($this->options['entropy_file'])) {
-            $this->options['entropy_file'] = $this->getStorageOption('entropy_file');
+        if (!isset($this->options['entropy_file'])) {
+            $this->options['entropy_file'] = $this->get_storage_option('entropy_file');
         }
-
         return $this->options['entropy_file'];
     }
-
     /**
      * set session.entropy_length
      *
@@ -670,22 +585,19 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  int $entropyLength
      * @throws Exception\InvalidArgumentException
      */
-    public function setEntropyLength($entropyLength): static
+    public function set_entropy_length($entropy_length): static
     {
         trigger_error('session.entropy_length is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        if (! is_numeric($entropyLength)) {
+        if (!is_numeric($entropy_length)) {
             throw new Exception\InvalidArgumentException('Invalid entropy_length; must be numeric');
         }
-        if (0 > $entropyLength) {
+        if (0 > $entropy_length) {
             throw new Exception\InvalidArgumentException('Invalid entropy_length; must be a positive integer or zero');
         }
-
-        $this->setOption('entropy_length', $entropyLength);
-        $this->setStorageOption('entropy_length', $entropyLength);
+        $this->set_option('entropy_length', $entropy_length);
+        $this->set_storage_option('entropy_length', $entropy_length);
         return $this;
     }
-
     /**
      * Get session.entropy_length
      *
@@ -693,53 +605,45 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      *
      * @return string
      */
-    public function getEntropyLength()
+    public function get_entropy_length()
     {
         trigger_error('session.entropy_length is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        if (! isset($this->options['entropy_length'])) {
-            $this->options['entropy_length'] = $this->getStorageOption('entropy_length');
+        if (!isset($this->options['entropy_length'])) {
+            $this->options['entropy_length'] = $this->get_storage_option('entropy_length');
         }
-
         return $this->options['entropy_length'];
     }
-
     /**
      * Set session.cache_expire
      *
      * @param  int $cacheExpire
      * @throws Exception\InvalidArgumentException
      */
-    public function setCacheExpire($cacheExpire): static
+    public function set_cache_expire($cache_expire): static
     {
-        if (! is_numeric($cacheExpire)) {
+        if (!is_numeric($cache_expire)) {
             throw new Exception\InvalidArgumentException('Invalid cache_expire; must be numeric');
         }
-
-        $cacheExpire = (int) $cacheExpire;
-        if (1 > $cacheExpire) {
+        $cache_expire = (int) $cache_expire;
+        if (1 > $cache_expire) {
             throw new Exception\InvalidArgumentException('Invalid cache_expire; must be a positive integer');
         }
-
-        $this->setOption('cache_expire', $cacheExpire);
-        $this->setStorageOption('cache_expire', $cacheExpire);
+        $this->set_option('cache_expire', $cache_expire);
+        $this->set_storage_option('cache_expire', $cache_expire);
         return $this;
     }
-
     /**
      * Get session.cache_expire
      *
      * @return string
      */
-    public function getCacheExpire()
+    public function get_cache_expire()
     {
-        if (! isset($this->options['cache_expire'])) {
-            $this->options['cache_expire'] = $this->getStorageOption('cache_expire');
+        if (!isset($this->options['cache_expire'])) {
+            $this->options['cache_expire'] = $this->get_storage_option('cache_expire');
         }
-
         return $this->options['cache_expire'];
     }
-
     /**
      * Set session.hash_function
      *
@@ -748,13 +652,11 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  string $hashFunction
      * @return mixed
      */
-    public function setHashFunction($hashFunction)
+    public function set_hash_function($hash_function)
     {
         trigger_error('session.hash_function is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        return $this->setOption('hash_function', $hashFunction);
+        return $this->set_option('hash_function', $hash_function);
     }
-
     /**
      * Get session.hash_function
      *
@@ -762,13 +664,11 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      *
      * @return string
      */
-    public function getHashFunction()
+    public function get_hash_function()
     {
         trigger_error('session.hash_function is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        return $this->getOption('hash_function');
+        return $this->get_option('hash_function');
     }
-
     /**
      * Set session.hash_bits_per_character
      *
@@ -777,19 +677,17 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  int $hashBitsPerCharacter
      * @throws Exception\InvalidArgumentException
      */
-    public function setHashBitsPerCharacter($hashBitsPerCharacter): static
+    public function set_hash_bits_per_character($hash_bits_per_character): static
     {
         trigger_error('session.hash_bits_per_character is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        if (! is_numeric($hashBitsPerCharacter)) {
+        if (!is_numeric($hash_bits_per_character)) {
             throw new Exception\InvalidArgumentException('Invalid hash bits per character provided');
         }
-        $hashBitsPerCharacter = (int) $hashBitsPerCharacter;
-        $this->setOption('hash_bits_per_character', $hashBitsPerCharacter);
-        $this->setStorageOption('hash_bits_per_character', $hashBitsPerCharacter);
+        $hash_bits_per_character = (int) $hash_bits_per_character;
+        $this->set_option('hash_bits_per_character', $hash_bits_per_character);
+        $this->set_storage_option('hash_bits_per_character', $hash_bits_per_character);
         return $this;
     }
-
     /**
      * Get session.hash_bits_per_character
      *
@@ -797,17 +695,14 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      *
      * @return string
      */
-    public function getHashBitsPerCharacter()
+    public function get_hash_bits_per_character()
     {
         trigger_error('session.hash_bits_per_character is removed starting with PHP 7.1', E_USER_DEPRECATED);
-
-        if (! isset($this->options['hash_bits_per_character'])) {
-            $this->options['hash_bits_per_character'] = $this->getStorageOption('hash_bits_per_character');
+        if (!isset($this->options['hash_bits_per_character'])) {
+            $this->options['hash_bits_per_character'] = $this->get_storage_option('hash_bits_per_character');
         }
-
         return $this->options['hash_bits_per_character'];
     }
-
     /**
      * Set session.sid_length
      *
@@ -816,117 +711,95 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      * @param  int $sidLength
      * @throws Exception\InvalidArgumentException
      */
-    public function setSidLength($sidLength): static
+    public function set_sid_length($sid_length): static
     {
-        if (! is_numeric($sidLength) || $sidLength < 22 || $sidLength > 256) {
+        if (!is_numeric($sid_length) || $sid_length < 22 || $sid_length > 256) {
             throw new Exception\InvalidArgumentException('Invalid length provided');
         }
-        $sidLength = (int) $sidLength;
-        $this->setOption('sid_length', $sidLength);
-        $this->setStorageOption('sid_length', $sidLength);
+        $sid_length = (int) $sid_length;
+        $this->set_option('sid_length', $sid_length);
+        $this->set_storage_option('sid_length', $sid_length);
         return $this;
     }
-
     /**
      * Get session.sid_length
      *
      * @return string
      */
-    public function getSidLength()
+    public function get_sid_length()
     {
-        if (! isset($this->options['sid_length'])) {
-            $this->options['sid_length'] = $this->getStorageOption('sid_length');
+        if (!isset($this->options['sid_length'])) {
+            $this->options['sid_length'] = $this->get_storage_option('sid_length');
         }
-
         return $this->options['sid_length'];
     }
-
     /**
      * Set session.sid_bits_per_character
      *
      * @param  int $sidBitsPerCharacter
      * @throws Exception\InvalidArgumentException
      */
-    public function setSidBitsPerCharacter($sidBitsPerCharacter): static
+    public function set_sid_bits_per_character($sid_bits_per_character): static
     {
-        if (! is_numeric($sidBitsPerCharacter)) {
+        if (!is_numeric($sid_bits_per_character)) {
             throw new Exception\InvalidArgumentException('Invalid sid bits per character provided');
         }
-        $sidBitsPerCharacter = (int) $sidBitsPerCharacter;
-        $this->setOption('sid_bits_per_character', $sidBitsPerCharacter);
-        $this->setStorageOption('sid_bits_per_character', $sidBitsPerCharacter);
+        $sid_bits_per_character = (int) $sid_bits_per_character;
+        $this->set_option('sid_bits_per_character', $sid_bits_per_character);
+        $this->set_storage_option('sid_bits_per_character', $sid_bits_per_character);
         return $this;
     }
-
     /**
      * Get session.sid_bits_per_character
      *
      * @return string
      */
-    public function getSidBitsPerCharacter()
+    public function get_sid_bits_per_character()
     {
-        if (! isset($this->options['sid_bits_per_character'])) {
-            $this->options['sid_bits_per_character'] = $this->getStorageOption('sid_bits_per_character');
+        if (!isset($this->options['sid_bits_per_character'])) {
+            $this->options['sid_bits_per_character'] = $this->get_storage_option('sid_bits_per_character');
         }
-
         return $this->options['sid_bits_per_character'];
     }
-
     /**
      * Set remember_me_seconds
      *
      * @param  int $rememberMeSeconds
      * @throws Exception\InvalidArgumentException
      */
-    public function setRememberMeSeconds($rememberMeSeconds): static
+    public function set_remember_me_seconds($remember_me_seconds): static
     {
-        if (! is_numeric($rememberMeSeconds)) {
+        if (!is_numeric($remember_me_seconds)) {
             throw new Exception\InvalidArgumentException('Invalid remember_me_seconds; must be numeric');
         }
-
-        $rememberMeSeconds = (int) $rememberMeSeconds;
-        if (1 > $rememberMeSeconds) {
+        $remember_me_seconds = (int) $remember_me_seconds;
+        if (1 > $remember_me_seconds) {
             throw new Exception\InvalidArgumentException('Invalid remember_me_seconds; must be a positive integer');
         }
-
-        $this->rememberMeSeconds = $rememberMeSeconds;
-        $this->setStorageOption('remember_me_seconds', $rememberMeSeconds);
+        $this->remember_me_seconds = $remember_me_seconds;
+        $this->set_storage_option('remember_me_seconds', $remember_me_seconds);
         return $this;
     }
-
     /**
      * Get remember_me_seconds
      *
      * @return int
      */
-    public function getRememberMeSeconds()
+    public function get_remember_me_seconds()
     {
-        if (null === $this->rememberMeSeconds) {
-            $this->rememberMeSeconds = $this->getStorageOption('remember_me_seconds');
+        if (null === $this->remember_me_seconds) {
+            $this->remember_me_seconds = $this->get_storage_option('remember_me_seconds');
         }
-        return $this->rememberMeSeconds;
+        return $this->remember_me_seconds;
     }
-
     /**
      * Cast configuration to an array
      */
-    public function toArray(): array
+    public function to_array(): array
     {
-        $extraOpts = [
-            'cookie_domain'       => $this->getCookieDomain(),
-            'cookie_httponly'     => $this->getCookieHttpOnly(),
-            'cookie_lifetime'     => $this->getCookieLifetime(),
-            'cookie_path'         => $this->getCookiePath(),
-            'cookie_samesite'     => $this->getCookieSameSite(),
-            'cookie_secure'       => $this->getCookieSecure(),
-            'name'                => $this->getName(),
-            'remember_me_seconds' => $this->getRememberMeSeconds(),
-            'save_path'           => $this->getSavePath(),
-            'use_cookies'         => $this->getUseCookies(),
-        ];
-        return array_merge($this->options, $extraOpts);
+        $extra_opts = ['cookie_domain' => $this->get_cookie_domain(), 'cookie_httponly' => $this->get_cookie_http_only(), 'cookie_lifetime' => $this->get_cookie_lifetime(), 'cookie_path' => $this->get_cookie_path(), 'cookie_samesite' => $this->get_cookie_same_site(), 'cookie_secure' => $this->get_cookie_secure(), 'name' => $this->get_name(), 'remember_me_seconds' => $this->get_remember_me_seconds(), 'save_path' => $this->get_save_path(), 'use_cookies' => $this->get_use_cookies()];
+        return array_merge($this->options, $extra_opts);
     }
-
     /**
      * Intercept get*() and set*() methods
      *
@@ -941,21 +814,16 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
     {
         $prefix = substr($method, 0, 3);
         $option = substr($method, 3);
-        $key    = preg_replace('#(?<=[a-z])([A-Z])#', '_\1', $option);
+        $key = preg_replace('#(?<=[a-z])([A-Z])#', '_\1', $option);
         assert(is_string($key));
         $key = strtolower($key);
         if ($prefix === 'set') {
             $value = array_shift($args);
-            return $this->setOption($key, $value);
+            return $this->set_option($key, $value);
         }
-
         if ($prefix === 'get') {
-            return $this->getOption($key);
+            return $this->get_option($key);
         }
-        throw new Exception\BadMethodCallException(sprintf(
-            'Method "%s" does not exist in %s',
-            $method,
-            static::class
-        ));
+        throw new Exception\BadMethodCallException(sprintf('Method "%s" does not exist in %s', $method, static::class));
     }
 }

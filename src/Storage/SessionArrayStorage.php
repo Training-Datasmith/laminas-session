@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Storage;
 
 /**
@@ -11,7 +10,7 @@ namespace Laminas\Session\Storage;
  * @template TValue
  * @template-extends AbstractSessionArrayStorage<TKey, TValue>
  */
-class SessionArrayStorage extends AbstractSessionArrayStorage
+class Session_Array_Storage extends Abstract_Session_Array_Storage
 {
     /**
      * Get Offset
@@ -23,7 +22,6 @@ class SessionArrayStorage extends AbstractSessionArrayStorage
     {
         return $_SESSION[$key];
     }
-
     /**
      * Offset Get
      *

@@ -1,7 +1,6 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session;
 
 class Module
@@ -9,12 +8,9 @@ class Module
     /**
      * Retrieve default laminas-session config for laminas-mvc context.
      */
-    public function getConfig(): array
+    public function get_config(): array
     {
-        $provider = new ConfigProvider();
-        return [
-            'service_manager' => $provider->getDependencyConfig(),
-            'validators'      => $provider->getValidatorConfig(),
-        ];
+        $provider = new Config_Provider();
+        return ['service_manager' => $provider->get_dependency_config(), 'validators' => $provider->get_validator_config()];
     }
 }

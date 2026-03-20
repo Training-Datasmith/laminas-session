@@ -1,13 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Validator;
 
 /**
  * Session validator interface
  */
-interface ValidatorInterface
+interface Validator_Interface
 {
     /**
      * This method will be called at the beginning of
@@ -16,8 +15,7 @@ interface ValidatorInterface
      *
      * @return bool
      */
-    public function isValid();
-
+    public function is_valid();
     /**
      * Get data from validator to be used for validation comparisons
      *
@@ -25,12 +23,11 @@ interface ValidatorInterface
      *
      * @return mixed
      */
-    public function getData();
-
+    public function get_data();
     /**
      * Get validator name for use with storing validators between requests
      *
      * @return string
      */
-    public function getName();
+    public function get_name();
 }

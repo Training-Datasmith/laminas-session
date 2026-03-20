@@ -1,13 +1,11 @@
 <?php
 
-declare(strict_types=1);
+declare (strict_types=1);
+namespace Laminas\Session\Save_Handler;
 
-namespace Laminas\Session\SaveHandler;
-
-use Laminas\Cache\Storage\ClearExpiredInterface as ClearExpiredCacheStorage;
-use Laminas\Cache\Storage\StorageInterface as CacheStorage;
-use ReturnTypeWillChange;
-
+use Laminas\Cache\Storage\Clear_Expired_Interface as ClearExpiredCacheStorage;
+use Laminas\Cache\Storage\Storage_Interface as CacheStorage;
+use Return_Type_Will_Change;
 /**
  * Cache session save handler
  *
@@ -15,7 +13,7 @@ use ReturnTypeWillChange;
  *
  * @final
  */
-class Cache implements SaveHandlerInterface
+class Cache implements Save_Handler_Interface
 {
     /**
      * Session Save Path
@@ -24,8 +22,7 @@ class Cache implements SaveHandlerInterface
      *
      * @var string
      */
-    protected $sessionSavePath;
-
+    protected $session_save_path;
     /**
      * Session Name
      *
@@ -33,23 +30,20 @@ class Cache implements SaveHandlerInterface
      *
      * @var string
      */
-    protected $sessionName;
-
+    protected $session_name;
     /**
      * The cache storage
      *
      * @var CacheStorage
      */
-    protected $cacheStorage;
-
+    protected $cache_storage;
     /**
      * Constructor
      */
-    public function __construct(CacheStorage $cacheStorage)
+    public function __construct(Cache_Storage $cache_storage)
     {
-        $this->setCacheStorage($cacheStorage);
+        $this->set_cache_storage($cache_storage);
     }
-
     /**
      * Open Session
      *
@@ -57,38 +51,34 @@ class Cache implements SaveHandlerInterface
      * @param string $name
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function open($path, $name)
     {
-        $this->sessionSavePath = $path;
-        $this->sessionName     = $name;
-
+        $this->session_save_path = $path;
+        $this->session_name = $name;
         return true;
     }
-
     /**
      * Close session
      *
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function close()
     {
         return true;
     }
-
     /**
      * Read session data
      *
      * @param string $id
      * @return string
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function read($id)
     {
-        return (string) $this->getCacheStorage()->getItem($id);
+        return (string) $this->get_cache_storage()->get_item($id);
     }
-
     /**
      * Write session data
      *
@@ -96,56 +86,51 @@ class Cache implements SaveHandlerInterface
      * @param string $data
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function write($id, $data)
     {
-        return $this->getCacheStorage()->setItem($id, $data);
+        return $this->get_cache_storage()->set_item($id, $data);
     }
-
     /**
      * Destroy session
      *
      * @param string $id
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function destroy($id)
     {
-        $this->getCacheStorage()->getItem($id, $exists);
-        if (! (bool) $exists) {
+        $this->get_cache_storage()->get_item($id, $exists);
+        if (!(bool) $exists) {
             return true;
         }
-
-        return (bool) $this->getCacheStorage()->removeItem($id);
+        return (bool) $this->get_cache_storage()->remove_item($id);
     }
-
     /**
      * Garbage Collection
      *
      * @param int $maxlifetime
      * @return bool
      */
-    #[ReturnTypeWillChange]
+    #[Return_Type_Will_Change]
     public function gc($maxlifetime)
     {
-        $cache = $this->getCacheStorage();
-        if ($cache instanceof ClearExpiredCacheStorage) {
-            return $cache->clearExpired();
+        $cache = $this->get_cache_storage();
+        if ($cache instanceof Clear_Expired_Cache_Storage) {
+            return $cache->clear_expired();
         }
         return true;
     }
-
     /**
      * Set cache storage
      *
      * @deprecated This method will no longer be needed in the future and will therefore be removed in version 3.0.
      */
-    public function setCacheStorage(CacheStorage $cacheStorage): static
+    public function set_cache_storage(Cache_Storage $cache_storage): static
     {
-        $this->cacheStorage = $cacheStorage;
+        $this->cache_storage = $cache_storage;
         return $this;
     }
-
     /**
      * Get cache storage
      *
@@ -153,18 +138,17 @@ class Cache implements SaveHandlerInterface
      *
      * @return CacheStorage
      */
-    public function getCacheStorage()
+    public function get_cache_storage()
     {
-        return $this->cacheStorage;
+        return $this->cache_storage;
     }
-
     /**
      * @deprecated Misspelled method - use getCacheStorage() instead. Will be removed in version 3.0
      *
      * @return CacheStorage
      */
-    public function getCacheStorge()
+    public function get_cache_storge()
     {
-        return $this->getCacheStorage();
+        return $this->get_cache_storage();
     }
 }

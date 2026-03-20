@@ -1,14 +1,12 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Storage;
 
 use ArrayAccess;
 use Countable;
 use Serializable;
 use Traversable;
-
 /**
  * Session storage interface
  *
@@ -20,63 +18,53 @@ use Traversable;
  * @template-extends Traversable<TKey, TValue>
  * @template-extends ArrayAccess<TKey, TValue>
  */
-interface StorageInterface extends Traversable, ArrayAccess, Serializable, Countable
+interface Storage_Interface extends Traversable, ArrayAccess, Serializable, Countable
 {
     /** @return float */
-    public function getRequestAccessTime();
-
+    public function get_request_access_time();
     /**
      * @param null|int|string $key
      * @return self
      */
     public function lock($key = null);
-
     /**
      * @param null|int|string $key
      * @return bool
      */
-    public function isLocked($key = null);
-
+    public function is_locked($key = null);
     /**
      * @param null|int|string $key
      * @return self
      */
     public function unlock($key = null);
-
     /** @return self */
-    public function markImmutable();
-
+    public function mark_immutable();
     /** @return bool */
-    public function isImmutable();
-
+    public function is_immutable();
     /**
      * @param string $key
      * @param mixed $value
      * @param bool $overwriteArray
      * @return self
      */
-    public function setMetadata($key, $value, $overwriteArray = false);
-
+    public function set_metadata($key, $value, $overwrite_array = false);
     /**
      * @param null|int|string $key
      * @return mixed
      */
-    public function getMetadata($key = null);
-
+    public function get_metadata($key = null);
     /**
      * @param null|int|string $key
      * @return self
      */
     public function clear($key = null);
-
     /**
      * @return self
      */
-    public function fromArray(array $array);
-
+    public function from_array(array $array);
     /**
      * @param bool $metadata
      * @return array
      */
-    public function toArray($metadata = false);
+    public function to_array($metadata = false);
 }

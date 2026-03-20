@@ -1,26 +1,21 @@
 <?php
 
-declare(strict_types=1);
-
-namespace Laminas\Session\SaveHandler;
+declare (strict_types=1);
+namespace Laminas\Session\Save_Handler;
 
 use function is_array;
-
 use Laminas\Session\Exception\InvalidArgumentException;
-
-use Laminas\Stdlib\AbstractOptions;
-
+use Laminas\Stdlib\Abstract_Options;
 use function phpversion;
 use function strlen;
 use function strtolower;
 use function version_compare;
-
 /**
  * MongoDB session save handler Options
  *
  * @deprecated This class will be removed without replacement in version 3.0.
  */
-class MongoDBOptions extends AbstractOptions
+class Mongo_Db_Options extends Abstract_Options
 {
     /**
      * Database name
@@ -28,14 +23,12 @@ class MongoDBOptions extends AbstractOptions
      * @var string
      */
     protected $database;
-
     /**
      * Collection name
      *
      * @var string
      */
     protected $collection;
-
     /**
      * Save options
      *
@@ -43,57 +36,49 @@ class MongoDBOptions extends AbstractOptions
      *
      * @var string
      */
-    protected $saveOptions = ['w' => 1];
-
+    protected $save_options = ['w' => 1];
     /**
      * Name field
      *
      * @var string
      */
-    protected $nameField = 'name';
-
+    protected $name_field = 'name';
     /**
      * Data field
      *
      * @var string
      */
-    protected $dataField = 'data';
-
+    protected $data_field = 'data';
     /**
      * Lifetime field
      *
      * @var string
      */
-    protected $lifetimeField = 'lifetime';
-
+    protected $lifetime_field = 'lifetime';
     /**
      * Modified field
      *
      * @var string
      */
-    protected $modifiedField = 'modified';
-
+    protected $modified_field = 'modified';
     /**
      * Use expireAfterSeconds index
      *
      * @var bool
      */
-    protected $useExpireAfterSecondsIndex = false;
-
+    protected $use_expire_after_seconds_index = false;
     /**
      * {@inheritdoc}
      */
     public function __construct($options = null)
     {
         parent::__construct($options);
-
-        $mongoVersion = phpversion('mongo');
-        $mongoVersion = $mongoVersion === false ? '0.0.0' : $mongoVersion;
-        if ($this->saveOptions === ['w' => 1] && version_compare($mongoVersion, '1.3.0', '<')) {
-            $this->saveOptions = ['safe' => true];
+        $mongo_version = phpversion('mongo');
+        $mongo_version = $mongo_version === false ? '0.0.0' : $mongo_version;
+        if ($this->save_options === ['w' => 1] && version_compare($mongo_version, '1.3.0', '<')) {
+            $this->save_options = ['safe' => true];
         }
     }
-
     /**
      * Override AbstractOptions::__set
      *
@@ -109,13 +94,11 @@ class MongoDBOptions extends AbstractOptions
             parent::__set($key, $value);
             return;
         }
-
-        if (! is_array($value)) {
+        if (!is_array($value)) {
             throw new InvalidArgumentException('Expected array for save options');
         }
-        $this->setSaveOptions($value);
+        $this->set_save_options($value);
     }
-
     /**
      * Set database name
      *
@@ -123,7 +106,7 @@ class MongoDBOptions extends AbstractOptions
      * @return MongoDBOptions
      * @throws InvalidArgumentException
      */
-    public function setDatabase($database)
+    public function set_database($database)
     {
         $database = (string) $database;
         if (strlen($database) === 0) {
@@ -132,17 +115,15 @@ class MongoDBOptions extends AbstractOptions
         $this->database = $database;
         return $this;
     }
-
     /**
      * Get database name
      *
      * @return string
      */
-    public function getDatabase()
+    public function get_database()
     {
         return $this->database;
     }
-
     /**
      * Set collection name
      *
@@ -150,7 +131,7 @@ class MongoDBOptions extends AbstractOptions
      * @return MongoDBOptions
      * @throws InvalidArgumentException
      */
-    public function setCollection($collection)
+    public function set_collection($collection)
     {
         $collection = (string) $collection;
         if (strlen($collection) === 0) {
@@ -159,17 +140,15 @@ class MongoDBOptions extends AbstractOptions
         $this->collection = $collection;
         return $this;
     }
-
     /**
      * Get collection name
      *
      * @return string
      */
-    public function getCollection()
+    public function get_collection()
     {
         return $this->collection;
     }
-
     /**
      * Set save options
      *
@@ -177,22 +156,20 @@ class MongoDBOptions extends AbstractOptions
      *
      * @return MongoDBOptions
      */
-    public function setSaveOptions(array $saveOptions)
+    public function set_save_options(array $save_options)
     {
-        $this->saveOptions = $saveOptions;
+        $this->save_options = $save_options;
         return $this;
     }
-
     /**
      * Get save options
      *
      * @return string
      */
-    public function getSaveOptions()
+    public function get_save_options()
     {
-        return $this->saveOptions;
+        return $this->save_options;
     }
-
     /**
      * Set name field
      *
@@ -200,26 +177,24 @@ class MongoDBOptions extends AbstractOptions
      * @return MongoDBOptions
      * @throws InvalidArgumentException
      */
-    public function setNameField($nameField)
+    public function set_name_field($name_field)
     {
-        $nameField = (string) $nameField;
-        if (strlen($nameField) === 0) {
+        $name_field = (string) $name_field;
+        if (strlen($name_field) === 0) {
             throw new InvalidArgumentException('$nameField must be a non-empty string');
         }
-        $this->nameField = $nameField;
+        $this->name_field = $name_field;
         return $this;
     }
-
     /**
      * Get name field
      *
      * @return string
      */
-    public function getNameField()
+    public function get_name_field()
     {
-        return $this->nameField;
+        return $this->name_field;
     }
-
     /**
      * Set data field
      *
@@ -227,26 +202,24 @@ class MongoDBOptions extends AbstractOptions
      * @return MongoDBOptions
      * @throws InvalidArgumentException
      */
-    public function setDataField($dataField)
+    public function set_data_field($data_field)
     {
-        $dataField = (string) $dataField;
-        if (strlen($dataField) === 0) {
+        $data_field = (string) $data_field;
+        if (strlen($data_field) === 0) {
             throw new InvalidArgumentException('$dataField must be a non-empty string');
         }
-        $this->dataField = $dataField;
+        $this->data_field = $data_field;
         return $this;
     }
-
     /**
      * Get data field
      *
      * @return string
      */
-    public function getDataField()
+    public function get_data_field()
     {
-        return $this->dataField;
+        return $this->data_field;
     }
-
     /**
      * Set lifetime field
      *
@@ -254,26 +227,24 @@ class MongoDBOptions extends AbstractOptions
      * @return MongoDBOptions
      * @throws InvalidArgumentException
      */
-    public function setLifetimeField($lifetimeField)
+    public function set_lifetime_field($lifetime_field)
     {
-        $lifetimeField = (string) $lifetimeField;
-        if (strlen($lifetimeField) === 0) {
+        $lifetime_field = (string) $lifetime_field;
+        if (strlen($lifetime_field) === 0) {
             throw new InvalidArgumentException('$lifetimeField must be a non-empty string');
         }
-        $this->lifetimeField = $lifetimeField;
+        $this->lifetime_field = $lifetime_field;
         return $this;
     }
-
     /**
      * Get lifetime Field
      *
      * @return string
      */
-    public function getLifetimeField()
+    public function get_lifetime_field()
     {
-        return $this->lifetimeField;
+        return $this->lifetime_field;
     }
-
     /**
      * Set Modified Field
      *
@@ -281,34 +252,31 @@ class MongoDBOptions extends AbstractOptions
      * @return MongoDBOptions
      * @throws InvalidArgumentException
      */
-    public function setModifiedField($modifiedField)
+    public function set_modified_field($modified_field)
     {
-        $modifiedField = (string) $modifiedField;
-        if (strlen($modifiedField) === 0) {
+        $modified_field = (string) $modified_field;
+        if (strlen($modified_field) === 0) {
             throw new InvalidArgumentException('$modifiedField must be a non-empty string');
         }
-        $this->modifiedField = $modifiedField;
+        $this->modified_field = $modified_field;
         return $this;
     }
-
     /**
      * Get modified Field
      *
      * @return string
      */
-    public function getModifiedField()
+    public function get_modified_field()
     {
-        return $this->modifiedField;
+        return $this->modified_field;
     }
-
     /**
      * @return boolean
      */
-    public function useExpireAfterSecondsIndex()
+    public function use_expire_after_seconds_index()
     {
-        return $this->useExpireAfterSecondsIndex;
+        return $this->use_expire_after_seconds_index;
     }
-
     /**
      * Enable expireAfterSeconds index.
      *
@@ -316,8 +284,8 @@ class MongoDBOptions extends AbstractOptions
      *
      * @param boolean $useExpireAfterSecondsIndex
      */
-    public function setUseExpireAfterSecondsIndex($useExpireAfterSecondsIndex): void
+    public function set_use_expire_after_seconds_index($use_expire_after_seconds_index): void
     {
-        $this->useExpireAfterSecondsIndex = (bool) $useExpireAfterSecondsIndex;
+        $this->use_expire_after_seconds_index = (bool) $use_expire_after_seconds_index;
     }
 }

@@ -1,37 +1,31 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Validator;
 
 use function array_shift;
 use function array_unshift;
-
 use function is_array;
-
-use Laminas\Session\Storage\StorageInterface;
-use Laminas\Stdlib\CallbackHandler;
-
+use Laminas\Session\Storage\Storage_Interface;
+use Laminas\Stdlib\Callback_Handler;
 /**
  * Base trait for validator chain implementations
  *
  * @deprecated Use {@see \Laminas\Session\ValidatorChain} directly
  */
-trait ValidatorChainTrait
+trait Validator_Chain_Trait
 {
     /** @var StorageInterface */
     protected $storage;
-
     /**
      * Retrieve session storage object
      *
      * @return StorageInterface
      */
-    public function getStorage()
+    public function get_storage()
     {
         return $this->storage;
     }
-
     /**
      * Internal implementation for attaching a listener to the
      * session validator chain.
@@ -41,24 +35,23 @@ trait ValidatorChainTrait
      * @param  int $priority
      * @return CallbackHandler|callable
      */
-    private function attachValidator($event, $callback, $priority)
+    private function attach_validator($event, $callback, $priority)
     {
         $context = null;
-        if ($callback instanceof ValidatorInterface) {
+        if ($callback instanceof Validator_Interface) {
             $context = $callback;
         } elseif (is_array($callback)) {
             $test = array_shift($callback);
-            if ($test instanceof ValidatorInterface) {
+            if ($test instanceof Validator_Interface) {
                 $context = $test;
             }
             array_unshift($callback, $test);
         }
-        if ($context instanceof ValidatorInterface) {
-            $data = $context->getData();
-            $name = $context->getName();
-            $this->getStorage()->setMetadata('_VALID', [$name => $data]);
+        if ($context instanceof Validator_Interface) {
+            $data = $context->get_data();
+            $name = $context->get_name();
+            $this->get_storage()->set_metadata('_VALID', [$name => $data]);
         }
-
         return parent::attach($event, $callback, $priority);
     }
 }

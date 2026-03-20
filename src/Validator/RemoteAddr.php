@@ -1,16 +1,14 @@
 <?php
 
-declare(strict_types=1);
-
+declare (strict_types=1);
 namespace Laminas\Session\Validator;
 
-use Laminas\Http\PhpEnvironment\RemoteAddress;
-use Laminas\Session\Validator\ValidatorInterface as SessionValidator;
-
+use Laminas\Http\Php_Environment\Remote_Address;
+use Laminas\Session\Validator\Validator_Interface as SessionValidator;
 /**
  * @final
  */
-class RemoteAddr implements SessionValidator
+class Remote_Addr implements Session_Validator
 {
     /**
      * Internal data.
@@ -20,7 +18,6 @@ class RemoteAddr implements SessionValidator
      * @var string
      */
     protected $data;
-
     /**
      * Whether to use proxy addresses or not.
      *
@@ -31,22 +28,19 @@ class RemoteAddr implements SessionValidator
      *
      * @var bool
      */
-    protected static $useProxy = false;
-
+    protected static $use_proxy = false;
     /**
      * List of trusted proxy IP addresses
      *
      * @var array
      */
-    protected static $trustedProxies = [];
-
+    protected static $trusted_proxies = [];
     /**
      * HTTP header to introspect for proxies
      *
      * @var string
      */
-    protected static $proxyHeader = 'HTTP_X_FORWARDED_FOR';
-
+    protected static $proxy_header = 'HTTP_X_FORWARDED_FOR';
     /**
      * Constructor
      * get the current user IP and store it in the session as 'valid data'
@@ -56,20 +50,18 @@ class RemoteAddr implements SessionValidator
     public function __construct($data = null)
     {
         if ($data === null || $data === '') {
-            $data = $this->getIpAddress();
+            $data = $this->get_ip_address();
         }
         $this->data = $data;
     }
-
     /**
      * isValid() - this method will determine if the current user IP matches the
      * IP we stored when we initialized this variable.
      */
-    public function isValid(): bool
+    public function is_valid(): bool
     {
-        return $this->getIpAddress() === $this->getData();
+        return $this->get_ip_address() === $this->get_data();
     }
-
     /**
      * Changes proxy handling setting.
      *
@@ -78,53 +70,48 @@ class RemoteAddr implements SessionValidator
      *
      * @param bool  $useProxy Whether to check also proxied IP addresses.
      */
-    public static function setUseProxy($useProxy = true): void
+    public static function set_use_proxy($use_proxy = true): void
     {
-        static::$useProxy = $useProxy;
+        static::$use_proxy = $use_proxy;
     }
-
     /**
      * Checks proxy handling setting.
      *
      * @return bool Current setting value.
      */
-    public static function getUseProxy()
+    public static function get_use_proxy()
     {
-        return static::$useProxy;
+        return static::$use_proxy;
     }
-
     /**
      * Set list of trusted proxy addresses
      */
-    public static function setTrustedProxies(array $trustedProxies): void
+    public static function set_trusted_proxies(array $trusted_proxies): void
     {
-        static::$trustedProxies = $trustedProxies;
+        static::$trusted_proxies = $trusted_proxies;
     }
-
     /**
      * Set the header to introspect for proxy IPs
      *
      * @param  string $header
      */
-    public static function setProxyHeader($header = 'X-Forwarded-For'): void
+    public static function set_proxy_header($header = 'X-Forwarded-For'): void
     {
-        static::$proxyHeader = $header;
+        static::$proxy_header = $header;
     }
-
     /**
      * Returns client IP address.
      *
      * @return string IP address.
      */
-    protected function getIpAddress()
+    protected function get_ip_address()
     {
-        $remoteAddress = new RemoteAddress();
-        $remoteAddress->setUseProxy(static::$useProxy);
-        $remoteAddress->setTrustedProxies(static::$trustedProxies);
-        $remoteAddress->setProxyHeader(static::$proxyHeader);
-        return $remoteAddress->getIpAddress();
+        $remote_address = new Remote_Address();
+        $remote_address->set_use_proxy(static::$use_proxy);
+        $remote_address->set_trusted_proxies(static::$trusted_proxies);
+        $remote_address->set_proxy_header(static::$proxy_header);
+        return $remote_address->get_ip_address();
     }
-
     /**
      * Retrieve token for validating call
      *
@@ -132,15 +119,14 @@ class RemoteAddr implements SessionValidator
      *
      * @return string
      */
-    public function getData()
+    public function get_data()
     {
         return $this->data;
     }
-
     /**
      * Return validator name
      */
-    public function getName(): string
+    public function get_name(): string
     {
         return self::class;
     }
