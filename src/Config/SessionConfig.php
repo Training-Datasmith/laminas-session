@@ -142,7 +142,7 @@ class SessionConfig extends StandardConfig
      *
      * {@inheritDoc}
      */
-    public function setOption($option, $value)
+    public function setOption($option, $value): static
     {
         switch (strtolower($option)) {
             case 'save_handler':
@@ -161,12 +161,12 @@ class SessionConfig extends StandardConfig
      * @return SessionConfig
      * @throws Exception\InvalidArgumentException
      */
-    public function setStorageOption($storageName, $storageValue)
+    public function setStorageOption($storageName, $storageValue): static
     {
         switch ($storageName) {
             case 'remember_me_seconds':
                 // do nothing; not an INI option
-                return;
+                return $this;
             case 'url_rewriter_tags':
                 $key = 'url_rewriter.tags';
                 break;

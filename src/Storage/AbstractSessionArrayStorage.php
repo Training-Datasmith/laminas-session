@@ -78,8 +78,11 @@ abstract class AbstractSessionArrayStorage implements
 
     /**
      * Get Offset
+     *
+     * @return mixed
      */
-    public function __get(mixed $key): mixed
+    #[ReturnTypeWillChange]
+    public function __get(mixed $key)
     {
         return $this->offsetGet($key);
     }
