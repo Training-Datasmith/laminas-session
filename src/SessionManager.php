@@ -254,7 +254,15 @@ class SessionManager extends AbstractManager
         if (! $storage->isImmutable()) {
             $_SESSION = $storage->toArray(true);
             session_write_close();
-            $storage->fromArray($_SESSION);
+            $sessionData = $_SESSION;
+            if (! is_array($sessionData)) {
+                if ($sessionData instanceof Traversable) {
+                    $sessionData = iterator_to_array($sessionData);
+                } else {
+                    $sessionData = (array) $sessionData;
+                }
+            }
+            $storage->fromArray($sessionData);
             $storage->markImmutable();
         }
     }

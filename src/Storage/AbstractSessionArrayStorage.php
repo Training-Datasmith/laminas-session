@@ -476,4 +476,14 @@ abstract class AbstractSessionArrayStorage implements
     {
         return $_SESSION;
     }
+
+    /**
+     * Destructor
+     *
+     * Resets $_SESSION superglobal to an array.
+     */
+    public function __destruct()
+    {
+        $_SESSION = $this->toArray(true);
+    }
 }

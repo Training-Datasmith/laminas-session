@@ -453,7 +453,7 @@ class StandardConfig implements ConfigInterface, SameSiteCookieCapableInterface
      */
     public function setCookiePath($cookiePath): static
     {
-        $path = parse_url($cookiePath, PHP_URL_PATH);
+        $path = parse_url((string) $cookiePath, PHP_URL_PATH);
 
         assert(is_string($path));
 

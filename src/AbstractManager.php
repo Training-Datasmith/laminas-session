@@ -41,7 +41,7 @@ abstract class AbstractManager implements Manager
      */
     protected $defaultStorageClass = SessionArrayStorage::class;
 
-    protected ?\Laminas\Session\SaveHandler\SaveHandlerInterface $saveHandler;
+    protected ?\Laminas\Session\SaveHandler\SaveHandlerInterface $saveHandler = null;
 
     /**
      * Constructor
